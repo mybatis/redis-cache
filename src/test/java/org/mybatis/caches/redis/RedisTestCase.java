@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -30,10 +31,10 @@ public final class RedisTestCase {
   private static final String DEFAULT_ID = "REDIS";
 
   // CacheManager holds any settings between tests
-  private RedisCache cache;
+  private static RedisCache cache;
 
-  @Before
-  public void newCache() {
+  @BeforeClass
+  public static void newCache() {
     cache = new RedisCache(DEFAULT_ID);
   }
 
