@@ -49,7 +49,7 @@ public final class RedisCache implements Cache {
 		try {
 			return callback.doWithRedis(jedis);
 		} finally {
-			pool.returnResource(jedis);
+      jedis.close();
 		}
   }
 

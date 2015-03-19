@@ -19,7 +19,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -30,22 +29,11 @@ public final class RedisTestCase {
 
   private static final String DEFAULT_ID = "REDIS";
 
-  // CacheManager holds any settings between tests
   private static RedisCache cache;
 
   @BeforeClass
   public static void newCache() {
     cache = new RedisCache(DEFAULT_ID);
-  }
-
-  @Test
-  public void shouldDemonstrateHowAllObjectsAreKept() {
-    for (int i = 0; i < 100000; i++) {
-      cache.putObject(i, i);
-      assertEquals(i, cache.getObject(i));
-    }
-    // TODO, size does not work
-    // assertEquals(100000, cache.getSize());
   }
 
   @Test
