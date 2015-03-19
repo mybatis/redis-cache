@@ -1,0 +1,93 @@
+/*
+ *    Copyright 2012 The original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.mybatis.caches.redis;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+import org.junit.Before;
+import org.junit.Test;
+
+/**
+ * @version $Id$
+ */
+public final class RedisTestCase {
+
+  private static final String DEFAULT_ID = "REDIS";
+
+  // CacheManager holds any settings between tests
+  private RedisCache cache;
+
+  @Before
+  public void newCache() {
+    cache = new RedisCache(DEFAULT_ID);
+  }
+
+  @Test
+  public void shouldDemonstrateHowAllObjectsAreKept() {
+    for (int i = 0; i < 100000; i++) {
+      cache.putObject(i, i);
+      assertEquals(i, cache.getObject(i));
+    }
+    // TODO, size does not work
+    // assertEquals(100000, cache.getSize());
+  }
+
+  @Test
+  public void shouldDemonstrateCopiesAreEqual() {
+    for (int i = 0; i < 1000; i++) {
+      cache.putObject(i, i);
+      assertEquals(i, cache.getObject(i));
+    }
+  }
+
+  @Test
+  public void shouldRemoveItemOnDemand() {
+    cache.putObject(0, 0);
+    assertNotNull(cache.getObject(0));
+    cache.removeObject(0);
+    assertNull(cache.getObject(0));
+  }
+
+  @Test
+  public void shouldFlushAllItemsOnDemand() {
+    for (int i = 0; i < 5; i++) {
+      cache.putObject(i, i);
+    }
+    assertNotNull(cache.getObject(0));
+    assertNotNull(cache.getObject(4));
+    cache.clear();
+    assertNull(cache.getObject(0));
+    assertNull(cache.getObject(4));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void shouldNotCreateCache() {
+    cache = new RedisCache(null);
+  }
+
+  @Test
+  public void shouldVerifyCacheId() {
+    assertEquals("REDIS", cache.getId());
+  }
+
+  @Test
+  public void shouldVerifyToString() {
+    assertEquals("Redis {REDIS}", cache.toString());
+  }
+
+}

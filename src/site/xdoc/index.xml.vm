@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2015 The MyBatis Team
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+  version: $Id$
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>MyBatis Redis | Reference Documentation</title>
+    <author email="mybatis-dev@googlegroups.com">The MyBatis Team</author>
+  </properties>
+
+  <body>
+    <section name="MyBatis Redis integration - Reference Documentation">
+
+    <p><a href="http://redis.org/">Redis</a> is an in-memory key-value store for small chunks of arbitrary data
+    (strings, objects) from results of database calls, API calls, or page rendering..</p>
+    <p>The Redis integration is built on top of the <code>Jedis</code> client, written by Jonathan Leibiusky.</p>
+    <p>Users that want to use Redis into their applications, have to download the
+    <a href="http://code.google.com/p/mybatis/downloads/list?q=Product-Cache">zip bundle</a>, decompress it and add the jars in the classpath;
+    Apache Maven users instead can simply add in
+    the <code>pom.xml</code> the following dependency:</p>
+    <source><![CDATA[<dependencies>
+  ...
+  <dependency>
+    <groupId>${project.groupId}</groupId>
+    <artifactId>${project.artifactId}</artifactId>
+    <version>${project.version}</version>
+  </dependency>
+  ...
+</dependencies>]]></source>
+            <p>then, just configure it in the mapper XML</p>
+            <source><![CDATA[<mapper namespace="org.acme.FooMapper">
+  <cache type="org.mybatis.caches.redis.RedisCache" />
+  ...
+</mapper>]]></source>
+
+  <p>The Redis cache is configurable by putting the <code>/redis.properties</code> classpath resource; 
+  if not found, the client will use the default setting.</p>
+  
+  <p>Any property found in the configuration file will be set as a property to the bean <code>JedisConfigPool</code>.
+  There is an additional parameter <code>host</code> to set the Redis server host name; if not set "localhost" will be used.</p>
+
+  <p>If users need to log cache operations, they can plug the Cache logging version:</p>
+  
+    <source><![CDATA[<mapper namespace="org.acme.FooMapper">
+  <cache type="org.mybatis.caches.redis.LoggingRedisCache" />
+  ...
+</mapper>]]></source>
+        </section>
+    </body>
+
+</document>
