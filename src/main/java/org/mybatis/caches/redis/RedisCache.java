@@ -30,35 +30,35 @@ import redis.clients.jedis.JedisPool;
  */
 public final class RedisCache implements Cache {
 
-	private final ReadWriteLock readWriteLock = new DummyReadWriteLock();
+  private final ReadWriteLock readWriteLock = new DummyReadWriteLock();
 
-	private String id;
+  private String id;
 
-	private static JedisPool pool;
+  private static JedisPool pool;
 
-	public RedisCache(final String id) {
-		if (id == null) {
-			throw new IllegalArgumentException("Cache instances require an ID");
-		}
-		this.id = id;
-		ConfigWithHost configWithHost = RedisConfigurationBuilder.getInstance().parseConfiguration();
-		pool = new JedisPool(configWithHost, configWithHost.getHost());
-	}
-
-	private Object execute(RedisCallback callback) {
-		Jedis jedis = pool.getResource();
-		try {
-			return callback.doWithRedis(jedis);
-		} finally {
-      jedis.close();
-		}
+  public RedisCache(final String id) {
+    if (id == null) {
+      throw new IllegalArgumentException("Cache instances require an ID");
+    }
+    this.id = id;
+    ConfigWithHost configWithHost = RedisConfigurationBuilder.getInstance().parseConfiguration();
+    pool = new JedisPool(configWithHost, configWithHost.getHost());
   }
 
-	public String getId() {
-		return this.id;
-	}
+  private Object execute(RedisCallback callback) {
+    Jedis jedis = pool.getResource();
+    try {
+      return callback.doWithRedis(jedis);
+    } finally {
+      jedis.close();
+    }
+  }
 
-	public int getSize() {
+  public String getId() {
+    return this.id;
+  }
+
+  public int getSize() {
     return (Integer) execute(new RedisCallback() {
       public Object doWithRedis(Jedis jedis) {
         Map<byte[], byte[]> result = jedis.hgetAll(id.toString().getBytes());
@@ -67,56 +67,48 @@ public final class RedisCache implements Cache {
     });
   }
 
-	public void putObject(final Object key, final Object value) {
-		execute(new RedisCallback() {
-			public Object doWithRedis(Jedis jedis) {
-				jedis.hset(id.toString().getBytes(), key.toString().getBytes(), SerializeUtil.serialize(value));
-				return null;
-			}
-		});
-	}
+  public void putObject(final Object key, final Object value) {
+    execute(new RedisCallback() {
+      public Object doWithRedis(Jedis jedis) {
+        jedis.hset(id.toString().getBytes(), key.toString().getBytes(), SerializeUtil.serialize(value));
+        return null;
+      }
+    });
+  }
 
-	public Object getObject(final Object key) {
-		return execute(new RedisCallback() {
-			public Object doWithRedis(Jedis jedis) {
-				return SerializeUtil.unserialize(jedis.hget(id.toString().getBytes(), key.toString().getBytes()));
-			}
-		});
-	}
+  public Object getObject(final Object key) {
+    return execute(new RedisCallback() {
+      public Object doWithRedis(Jedis jedis) {
+        return SerializeUtil.unserialize(jedis.hget(id.toString().getBytes(), key.toString().getBytes()));
+      }
+    });
+  }
 
-	public Object removeObject(final Object key) {
-		return execute(new RedisCallback() {
-			public Object doWithRedis(Jedis jedis) {
-				return jedis.hdel(id.toString(), key.toString());
-			}
-		});
-	}
+  public Object removeObject(final Object key) {
+    return execute(new RedisCallback() {
+      public Object doWithRedis(Jedis jedis) {
+        return jedis.hdel(id.toString(), key.toString());
+      }
+    });
+  }
 
-	public void clear() {
-		execute(new RedisCallback() {
-			public Object doWithRedis(Jedis jedis) {
-				jedis.del(id.toString());
-				return null;
-			}
-		});
+  public void clear() {
+    execute(new RedisCallback() {
+      public Object doWithRedis(Jedis jedis) {
+        jedis.del(id.toString());
+        return null;
+      }
+    });
 
-	}
+  }
 
-	public ReadWriteLock getReadWriteLock() {
-		return readWriteLock;
-	}
+  public ReadWriteLock getReadWriteLock() {
+    return readWriteLock;
+  }
 
-    @Override
-    public String toString() {
-        return "Redis {"
-                + id
-                + "}";
-    }
-
-	@Override
-	protected void finalize() throws Throwable {
-		pool.destroy();
-		super.finalize();
-	}
+  @Override
+  public String toString() {
+    return "Redis {" + id + "}";
+  }
 
 }
