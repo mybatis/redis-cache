@@ -15,6 +15,7 @@
  */
 package org.mybatis.caches.redis;
 
+import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
@@ -58,8 +59,13 @@ public final class RedisCache implements Cache {
 	}
 
 	public int getSize() {
-	  return 0;
-	}
+    return (Integer) execute(new RedisCallback() {
+      public Object doWithRedis(Jedis jedis) {
+        Map<byte[], byte[]> result = jedis.hgetAll(id.toString().getBytes());
+        return result.size();
+      }
+    });
+  }
 
 	public void putObject(final Object key, final Object value) {
 		execute(new RedisCallback() {

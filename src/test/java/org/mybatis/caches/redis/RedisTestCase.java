@@ -23,6 +23,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
+ * Test with Ubuntu
+ * sudo apt-get install redis-server
+ * execute the test
+ * 
  * @version $Id$
  */
 public final class RedisTestCase {
