@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>RedisConfigurationBuilder.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis-redis</a> &gt; <a href="index.source.html" class="el_package">org.mybatis.caches.redis</a> &gt; <span class="el_source">RedisConfigurationBuilder.java</span></div><h1>RedisConfigurationBuilder.java</h1><pre class="source lang-java linenums">/*
+ *    Copyright 2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.mybatis.caches.redis;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+import java.util.Properties;
+
+import org.apache.ibatis.cache.CacheException;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.SystemMetaObject;
+
+/**
+ * Converter from the Config to a proper {@link ConfigWithHost}.
+ *
+ * @author Eduardo Macarron
+ */
+final class RedisConfigurationBuilder {
+
+	/**
+	 * This class instance.
+	 */
+<span class="fc" id="L37">	private static final RedisConfigurationBuilder INSTANCE = new RedisConfigurationBuilder();</span>
+
+	private static final String SYSTEM_PROPERTY_REDIS_PROPERTIES_FILENAME = &quot;redis.properties.filename&quot;;
+
+	private static final String REDIS_RESOURCE = &quot;redis.properties&quot;;
+
+	private final String redisPropertiesFilename;
+
+	/**
+	 * Hidden constructor, this class can't be instantiated.
+	 */
+<span class="fc" id="L48">	private RedisConfigurationBuilder() {</span>
+<span class="fc" id="L49">		redisPropertiesFilename = System.getProperty(SYSTEM_PROPERTY_REDIS_PROPERTIES_FILENAME, REDIS_RESOURCE);</span>
+<span class="fc" id="L50">	}</span>
+
+	/**
+	 * Return this class instance.
+	 *
+	 * @return this class instance.
+	 */
+	public static RedisConfigurationBuilder getInstance() {
+<span class="fc" id="L58">		return INSTANCE;</span>
+	}
+
+	/**
+	 * Parses the Config and builds a new {@link ConfigWithHost}.
+	 *
+	 * @return the converted {@link ConfigWithHost}.
+	 */
+	public ConfigWithHost parseConfiguration() {
+<span class="fc" id="L67">		return parseConfiguration(getClass().getClassLoader());</span>
+	}
+
+	/**
+	 * Parses the Config and builds a new {@link ConfigWithHost}.
+	 *
+	 * @param the
+	 *            {@link ClassLoader} used to load the
+	 *            {@code memcached.properties} file in classpath.
+	 * @return the converted {@link ConfigWithHost}.
+	 */
+	public ConfigWithHost parseConfiguration(ClassLoader classLoader) {
+<span class="fc" id="L79">		Properties config = new Properties();</span>
+
+<span class="fc" id="L81">		InputStream input = classLoader.getResourceAsStream(redisPropertiesFilename);</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">		if (input != null) {</span>
+			try {
+<span class="nc" id="L84">				config.load(input);</span>
+<span class="nc" id="L85">			} catch (IOException e) {</span>
+<span class="nc" id="L86">				throw new RuntimeException(</span>
+						&quot;An error occurred while reading classpath property '&quot;
+								+ redisPropertiesFilename
+								+ &quot;', see nested exceptions&quot;, e);
+			} finally {
+<span class="nc" id="L91">				try {</span>
+<span class="nc" id="L92">					input.close();</span>
+<span class="nc" id="L93">				} catch (IOException e) {</span>
+					// close quietly
+<span class="nc" id="L95">				}</span>
+<span class="nc" id="L96">			}</span>
+		}
+
+<span class="fc" id="L99">		ConfigWithHost jedisConfig = new ConfigWithHost();</span>
+<span class="fc" id="L100">		jedisConfig.setHost(&quot;localhost&quot;);</span>
+<span class="fc" id="L101">		setConfigProperties(config, jedisConfig);</span>
+<span class="fc" id="L102">		return jedisConfig;</span>
+	}
+
+	private void setConfigProperties(Properties properties,
+			ConfigWithHost jedisConfig) {
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">		if (properties != null) {</span>
+<span class="fc" id="L108">			MetaObject metaCache = SystemMetaObject.forObject(jedisConfig);</span>
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">			for (Map.Entry&lt;Object, Object&gt; entry : properties.entrySet()) {</span>
+<span class="nc" id="L110">				String name = (String) entry.getKey();</span>
+<span class="nc" id="L111">				String value = (String) entry.getValue();</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">				if (metaCache.hasSetter(name)) {</span>
+<span class="nc" id="L113">					Class&lt;?&gt; type = metaCache.getSetterType(name);</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">					if (String.class == type) {</span>
+<span class="nc" id="L115">						metaCache.setValue(name, value);</span>
+<span class="nc bnc" id="L116" title="All 4 branches missed.">					} else if (int.class == type || Integer.class == type) {</span>
+<span class="nc" id="L117">						metaCache.setValue(name, Integer.valueOf(value));</span>
+<span class="nc bnc" id="L118" title="All 4 branches missed.">					} else if (long.class == type || Long.class == type) {</span>
+<span class="nc" id="L119">						metaCache.setValue(name, Long.valueOf(value));</span>
+<span class="nc bnc" id="L120" title="All 4 branches missed.">					} else if (short.class == type || Short.class == type) {</span>
+<span class="nc" id="L121">						metaCache.setValue(name, Short.valueOf(value));</span>
+<span class="nc bnc" id="L122" title="All 4 branches missed.">					} else if (byte.class == type || Byte.class == type) {</span>
+<span class="nc" id="L123">						metaCache.setValue(name, Byte.valueOf(value));</span>
+<span class="nc bnc" id="L124" title="All 4 branches missed.">					} else if (float.class == type || Float.class == type) {</span>
+<span class="nc" id="L125">						metaCache.setValue(name, Float.valueOf(value));</span>
+<span class="nc bnc" id="L126" title="All 4 branches missed.">					} else if (boolean.class == type || Boolean.class == type) {</span>
+<span class="nc" id="L127">						metaCache.setValue(name, Boolean.valueOf(value));</span>
+<span class="nc bnc" id="L128" title="All 4 branches missed.">					} else if (double.class == type || Double.class == type) {</span>
+<span class="nc" id="L129">						metaCache.setValue(name, Double.valueOf(value));</span>
+					} else {
+<span class="nc" id="L131">						throw new CacheException(&quot;Unsupported property type: '&quot;</span>
+								+ name + &quot;' of type &quot; + type);
+					}
+				}
+<span class="nc" id="L135">			}</span>
+		}
+<span class="fc" id="L137">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
