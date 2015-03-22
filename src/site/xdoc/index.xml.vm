@@ -58,12 +58,6 @@
   <p>Any property found in the configuration file will be set as a property to the bean <code>JedisConfigPool</code>.
   There is an additional parameter <code>host</code> to set the Redis server host name; if not set "localhost" will be used.</p>
 
-  <p>If users need to log cache operations, they can plug the Cache logging version:</p>
-  
-    <source><![CDATA[<mapper namespace="org.acme.FooMapper">
-  <cache type="org.mybatis.caches.redis.LoggingRedisCache" />
-  ...
-</mapper>]]></source>
         </section>
     </body>
 
