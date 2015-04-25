@@ -42,25 +42,6 @@
 </parameter>
 </method>
 </class>
-<class name="LoggingRedisCache"
- extends="org.apache.ibatis.cache.decorators.LoggingCache"
- abstract="false"
- static="false"
- final="true"
- deprecated="not deprecated"
- visibility="public"
->
-<constructor name="LoggingRedisCache"
- type="org.mybatis.caches.redis.LoggingRedisCache"
- static="false"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="id" type="java.lang.String">
-</parameter>
-</constructor>
-</class>
 <class name="RedisCache"
  extends="java.lang.Object"
  abstract="false"
@@ -69,8 +50,6 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<implements name="org.apache.ibatis.cache.Cache">
-</implements>
 <constructor name="RedisCache"
  type="org.mybatis.caches.redis.RedisCache"
  static="false"
@@ -228,28 +207,6 @@
  visibility="public"
 >
 <parameter name="bytes" type="byte[]">
-</parameter>
-</method>
-</class>
-<class name="StringUtils"
- extends="java.lang.Object"
- abstract="false"
- static="false"
- final="true"
- deprecated="not deprecated"
- visibility="public"
->
-<method name="sha1Hex"
- return="java.lang.String"
- abstract="false"
- native="false"
- synchronized="false"
- static="true"
- final="false"
- deprecated="not deprecated"
- visibility="public"
->
-<parameter name="data" type="java.lang.String">
 </parameter>
 </method>
 </class>

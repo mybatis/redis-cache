@@ -1,14 +1,12 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-mybatis-redis,org.mybatis.caches.redis,StringUtils,146,0,4,0,18,0,7,0,5,0
-mybatis-redis,org.mybatis.caches.redis,DummyReadWriteLock,6,8,0,0,2,3,2,1,2,1
-mybatis-redis,org.mybatis.caches.redis,RedisCache.new RedisCallback() {...},0,24,0,0,0,2,0,2,0,2
-mybatis-redis,org.mybatis.caches.redis,RedisCache.new RedisCallback() {...},0,15,0,0,0,3,0,2,0,2
-mybatis-redis,org.mybatis.caches.redis,RedisCache.new RedisCallback() {...},0,29,0,0,0,3,0,2,0,2
-mybatis-redis,org.mybatis.caches.redis,RedisCache.new RedisCallback() {...},0,22,0,0,0,2,0,2,0,2
-mybatis-redis,org.mybatis.caches.redis,LoggingRedisCache,7,0,0,0,2,0,1,0,1,0
-mybatis-redis,org.mybatis.caches.redis,RedisConfigurationBuilder,161,58,35,3,30,17,19,6,0,6
 mybatis-redis,org.mybatis.caches.redis,SerializeUtil,15,40,0,2,5,13,1,3,1,2
 mybatis-redis,org.mybatis.caches.redis,RedisCache.new RedisCallback() {...},18,0,0,0,3,0,2,0,2,0
+mybatis-redis,org.mybatis.caches.redis,DummyReadWriteLock,6,8,0,0,2,3,2,1,2,1
+mybatis-redis,org.mybatis.caches.redis,RedisCache.new RedisCallback() {...},0,24,0,0,0,2,0,2,0,2
 mybatis-redis,org.mybatis.caches.redis,DummyReadWriteLock.DummyLock,9,3,0,0,6,1,6,1,6,1
-mybatis-redis,org.mybatis.caches.redis,ConfigWithHost,0,10,0,0,0,4,0,3,0,3
+mybatis-redis,org.mybatis.caches.redis,RedisCache.new RedisCallback() {...},0,15,0,0,0,3,0,2,0,2
+mybatis-redis,org.mybatis.caches.redis,RedisCache.new RedisCallback() {...},0,29,0,0,0,3,0,2,0,2
 mybatis-redis,org.mybatis.caches.redis,RedisCache,17,88,0,2,2,19,2,9,2,8
+mybatis-redis,org.mybatis.caches.redis,ConfigWithHost,0,10,0,0,0,4,0,3,0,3
+mybatis-redis,org.mybatis.caches.redis,RedisCache.new RedisCallback() {...},0,22,0,0,0,2,0,2,0,2
+mybatis-redis,org.mybatis.caches.redis,RedisConfigurationBuilder,161,58,35,3,30,17,19,6,0,6
