@@ -15,7 +15,7 @@ branches:
 
 env:
   global:
-    - secure: "jWLfOryabB89R5v7nD3V/8ke6+B26UW8E5wjwKj7dDhjfmGUg+KbOShqWrq4\nEAnyE4GltwDLxKErZ5aAPWcT47C3GJYocKtmTcec2sblqMdVVUd3udylrM1d\n66Yb0XZoqri9JJ9pb8ObDp5XRV+ZQ5xP0w1gboNY6SynJg/1FKk="
-    - secure: "UV14rAITDqou5jObPInlIS3IYdf45LihGal9/+C4TLyhXLaVktbT/arFAAIF\ndpv9OM+YgeA7ZeRZLJ8vbgipO+rxizPNL1DqK1rp9s5B2F2y9+ir47nTwayL\n0RN7TgdswjzZZKOukWF2CVK1hjk+n8iFkCrorU22trmXlHc0aoE="
+    - secure: "gSb0ypSPWA06Fhf7q8cNTdrAQuFg2lhUCnCBCmShyVf6PnB6oCiGnWlrc7/p\npycxgOGDO/3mon/u76Ussmfyt+DSo6UkMaRqj0bGSuUeTbIcvmjbQw/4TddG\nbBHjKALnPamPUyy4+fzvTjGFPDgGWGV9EKM/DOHktqHv10tGO4g="
+    - secure: "jKTLoweBTuKzITNWspi119kYsTjQIadp4sInlgao++HQGlFQwymqaElzSzXF\nwEggqFolaNVUt6/npM3i9k3i+8x6hENSinkBdT/edJd4R+E+eK/NRiai3Ivm\n1hRDnLKfDB0nLwy2gbHtwJ1t/uNgWNgMn9WIzt5O71/7RquslnY="
 
 services: redis-server
