@@ -38,7 +38,7 @@ final class RedisConfigurationBuilder {
 
 	private static final String SYSTEM_PROPERTY_REDIS_PROPERTIES_FILENAME = &quot;redis.properties.filename&quot;;
 
-	private static final String REDIS_RESOURCE = &quot;redis.properties&quot;;
+<span class="fc" id="L41">	private static final String REDIS_RESOURCE = &quot;redis.properties&quot;;</span>
 
 	private final String redisPropertiesFilename;
 
@@ -84,15 +84,15 @@ final class RedisConfigurationBuilder {
 <span class="nc" id="L84">				config.load(input);</span>
 <span class="nc" id="L85">			} catch (IOException e) {</span>
 <span class="nc" id="L86">				throw new RuntimeException(</span>
-						&quot;An error occurred while reading classpath property '&quot;
-								+ redisPropertiesFilename
-								+ &quot;', see nested exceptions&quot;, e);
-			} finally {
-<span class="nc" id="L91">				try {</span>
+<span class="nc" id="L87">						&quot;An error occurred while reading classpath property '&quot;</span>
+<span class="nc" id="L88">								+ redisPropertiesFilename</span>
+<span class="nc" id="L89">								+ &quot;', see nested exceptions&quot;, e);</span>
+<span class="nc" id="L90">			} finally {</span>
+				try {
 <span class="nc" id="L92">					input.close();</span>
 <span class="nc" id="L93">				} catch (IOException e) {</span>
 					// close quietly
-<span class="nc" id="L95">				}</span>
+				}
 <span class="nc" id="L96">			}</span>
 		}
 
@@ -127,12 +127,12 @@ final class RedisConfigurationBuilder {
 <span class="nc" id="L127">						metaCache.setValue(name, Boolean.valueOf(value));</span>
 <span class="nc bnc" id="L128" title="All 4 branches missed.">					} else if (double.class == type || Double.class == type) {</span>
 <span class="nc" id="L129">						metaCache.setValue(name, Double.valueOf(value));</span>
-					} else {
+<span class="nc" id="L130">					} else {</span>
 <span class="nc" id="L131">						throw new CacheException(&quot;Unsupported property type: '&quot;</span>
-								+ name + &quot;' of type &quot; + type);
+<span class="nc" id="L132">								+ name + &quot;' of type &quot; + type);</span>
 					}
 				}
-<span class="nc" id="L135">			}</span>
+			}
 		}
 <span class="fc" id="L137">	}</span>
 
