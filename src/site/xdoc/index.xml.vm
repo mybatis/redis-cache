@@ -34,7 +34,7 @@
     (strings, objects) from results of database calls, API calls, or page rendering..</p>
     <p>The Redis integration is built on top of the <code>Jedis</code> client, written by Jonathan Leibiusky.</p>
     <p>Users that want to use Redis into their applications, have to download the
-    <a href="http://code.google.com/p/mybatis/downloads/list?q=Product-Cache">zip bundle</a>, decompress it and add the jars in the classpath;
+    <a href="https://github.com/mybatis/redis-cache/releases">zip bundle</a>, decompress it and add the jars in the classpath;
     Apache Maven users instead can simply add in
     the <code>pom.xml</code> the following dependency:</p>
     <source><![CDATA[<dependencies>
