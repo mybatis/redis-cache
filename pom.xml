@@ -35,7 +35,7 @@
   <scm>
     <url>http://github.com/mybatis/redis-cache</url>
     <connection>scm:git:ssh://github.com/mybatis/redis-cache.git</connection>
-    <developerConnection>scm:git:git+ssh://git@github.com/mybatis/redis-cache.git</developerConnection>
+    <developerConnection>scm:git:ssh://git@github.com/mybatis/redis-cache.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
   <issueManagement>
