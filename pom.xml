@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>24-SNAPSHOT</version>
+    <version>25-SNAPSHOT</version>
   </parent>
 
   <groupId>org.mybatis.caches</groupId>
@@ -66,7 +66,7 @@
     <dependency>
       <groupId>org.mybatis</groupId>
       <artifactId>mybatis</artifactId>
-      <version>3.2.8</version>
+      <version>3.3.0</version>
       <scope>provided</scope>
     </dependency>
 
@@ -106,22 +106,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>clean</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 
   <profiles>
     <profile>
