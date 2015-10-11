@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>RedisCache.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis-redis</a> &gt; <a href="index.source.html" class="el_package">org.mybatis.caches.redis</a> &gt; <span class="el_source">RedisCache.java</span></div><h1>RedisCache.java</h1><pre class="source lang-java linenums"><span class="pc" id="L1">/*</span>
- *    Copyright 2015 The original author or authors.
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>RedisCache.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mybatis-redis</a> &gt; <a href="index.source.html" class="el_package">org.mybatis.caches.redis</a> &gt; <span class="el_source">RedisCache.java</span></div><h1>RedisCache.java</h1><pre class="source lang-java linenums"><span class="pc" id="L1">/**</span>
+ *    Copyright 2015 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  *    you may not use this file except in compliance with the License.
@@ -46,70 +46,82 @@ public final class RedisCache implements Cache {
 <span class="fc" id="L46">  }</span>
 
   private Object execute(RedisCallback callback) {
-<span class="fc" id="L49">    Jedis jedis = pool.getResource();</span>
+<span class="nc" id="L49">    Jedis jedis = pool.getResource();</span>
     try {
-<span class="fc" id="L51">      return callback.doWithRedis(jedis);</span>
+<span class="nc" id="L51">      return callback.doWithRedis(jedis);</span>
 <span class="nc" id="L52">    } finally {</span>
-<span class="pc" id="L53">      jedis.close();</span>
+<span class="nc" id="L53">      jedis.close();</span>
 <span class="nc" id="L54">    }</span>
   }
 
-  public String getId() {
-<span class="fc" id="L58">    return this.id;</span>
+  @Override
+public String getId() {
+<span class="fc" id="L59">    return this.id;</span>
   }
 
-  public int getSize() {
-<span class="nc" id="L62">    return (Integer) execute(new RedisCallback() {</span>
-      public Object doWithRedis(Jedis jedis) {
-<span class="nc" id="L64">        Map&lt;byte[], byte[]&gt; result = jedis.hgetAll(id.toString().getBytes());</span>
-<span class="nc" id="L65">        return result.size();</span>
-      }
-    });
-  }
-
-  public void putObject(final Object key, final Object value) {
-<span class="fc" id="L71">    execute(new RedisCallback() {</span>
-      public Object doWithRedis(Jedis jedis) {
-<span class="fc" id="L73">        jedis.hset(id.toString().getBytes(), key.toString().getBytes(), SerializeUtil.serialize(value));</span>
-<span class="fc" id="L74">        return null;</span>
-      }
-    });
-<span class="fc" id="L77">  }</span>
-
-  public Object getObject(final Object key) {
-<span class="fc" id="L80">    return execute(new RedisCallback() {</span>
-      public Object doWithRedis(Jedis jedis) {
-<span class="fc" id="L82">        return SerializeUtil.unserialize(jedis.hget(id.toString().getBytes(), key.toString().getBytes()));</span>
+  @Override
+public int getSize() {
+<span class="nc" id="L64">    return (Integer) execute(new RedisCallback() {</span>
+      @Override
+    public Object doWithRedis(Jedis jedis) {
+<span class="nc" id="L67">        Map&lt;byte[], byte[]&gt; result = jedis.hgetAll(id.toString().getBytes());</span>
+<span class="nc" id="L68">        return result.size();</span>
       }
     });
   }
 
-  public Object removeObject(final Object key) {
-<span class="fc" id="L88">    return execute(new RedisCallback() {</span>
-      public Object doWithRedis(Jedis jedis) {
-<span class="fc" id="L90">        return jedis.hdel(id.toString(), key.toString());</span>
+  @Override
+public void putObject(final Object key, final Object value) {
+<span class="pc" id="L75">    execute(new RedisCallback() {</span>
+      @Override
+    public Object doWithRedis(Jedis jedis) {
+<span class="nc" id="L78">        jedis.hset(id.toString().getBytes(), key.toString().getBytes(), SerializeUtil.serialize(value));</span>
+<span class="nc" id="L79">        return null;</span>
+      }
+    });
+<span class="nc" id="L82">  }</span>
+
+  @Override
+public Object getObject(final Object key) {
+<span class="nc" id="L86">    return execute(new RedisCallback() {</span>
+      @Override
+    public Object doWithRedis(Jedis jedis) {
+<span class="nc" id="L89">        return SerializeUtil.unserialize(jedis.hget(id.toString().getBytes(), key.toString().getBytes()));</span>
       }
     });
   }
 
-  public void clear() {
-<span class="fc" id="L96">    execute(new RedisCallback() {</span>
-      public Object doWithRedis(Jedis jedis) {
-<span class="fc" id="L98">        jedis.del(id.toString());</span>
-<span class="fc" id="L99">        return null;</span>
+  @Override
+public Object removeObject(final Object key) {
+<span class="nc" id="L96">    return execute(new RedisCallback() {</span>
+      @Override
+    public Object doWithRedis(Jedis jedis) {
+<span class="nc" id="L99">        return jedis.hdel(id.toString(), key.toString());</span>
+      }
+    });
+  }
+
+  @Override
+public void clear() {
+<span class="nc" id="L106">    execute(new RedisCallback() {</span>
+      @Override
+    public Object doWithRedis(Jedis jedis) {
+<span class="nc" id="L109">        jedis.del(id.toString());</span>
+<span class="nc" id="L110">        return null;</span>
       }
     });
 
-<span class="fc" id="L103">  }</span>
+<span class="nc" id="L114">  }</span>
 
-  public ReadWriteLock getReadWriteLock() {
-<span class="nc" id="L106">    return readWriteLock;</span>
+  @Override
+public ReadWriteLock getReadWriteLock() {
+<span class="nc" id="L118">    return readWriteLock;</span>
   }
 
   @Override
   public String toString() {
-<span class="fc" id="L111">    return &quot;Redis {&quot; + id + &quot;}&quot;;</span>
+<span class="fc" id="L123">    return &quot;Redis {&quot; + id + &quot;}&quot;;</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
