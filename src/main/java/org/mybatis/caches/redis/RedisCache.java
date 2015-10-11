@@ -54,12 +54,15 @@ public final class RedisCache implements Cache {
     }
   }
 
+  @Override
   public String getId() {
     return this.id;
   }
 
+  @Override
   public int getSize() {
     return (Integer) execute(new RedisCallback() {
+      @Override
       public Object doWithRedis(Jedis jedis) {
         Map<byte[], byte[]> result = jedis.hgetAll(id.toString().getBytes());
         return result.size();
@@ -67,8 +70,10 @@ public final class RedisCache implements Cache {
     });
   }
 
+  @Override
   public void putObject(final Object key, final Object value) {
     execute(new RedisCallback() {
+      @Override
       public Object doWithRedis(Jedis jedis) {
         jedis.hset(id.toString().getBytes(), key.toString().getBytes(), SerializeUtil.serialize(value));
         return null;
@@ -76,24 +81,30 @@ public final class RedisCache implements Cache {
     });
   }
 
+  @Override
   public Object getObject(final Object key) {
     return execute(new RedisCallback() {
+      @Override
       public Object doWithRedis(Jedis jedis) {
         return SerializeUtil.unserialize(jedis.hget(id.toString().getBytes(), key.toString().getBytes()));
       }
     });
   }
 
+  @Override
   public Object removeObject(final Object key) {
     return execute(new RedisCallback() {
+      @Override
       public Object doWithRedis(Jedis jedis) {
         return jedis.hdel(id.toString(), key.toString());
       }
     });
   }
 
+  @Override
   public void clear() {
     execute(new RedisCallback() {
+      @Override
       public Object doWithRedis(Jedis jedis) {
         jedis.del(id.toString());
         return null;
@@ -102,6 +113,7 @@ public final class RedisCache implements Cache {
 
   }
 
+  @Override
   public ReadWriteLock getReadWriteLock() {
     return readWriteLock;
   }
