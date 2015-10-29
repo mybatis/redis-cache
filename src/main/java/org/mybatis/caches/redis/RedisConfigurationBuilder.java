@@ -25,7 +25,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 
 /**
- * Converter from the Config to a proper {@link ConfigWithHost}.
+ * Converter from the Config to a proper {@link RedisConfig}.
  *
  * @author Eduardo Macarron
  */
@@ -59,23 +59,23 @@ final class RedisConfigurationBuilder {
 	}
 
 	/**
-	 * Parses the Config and builds a new {@link ConfigWithHost}.
+	 * Parses the Config and builds a new {@link RedisConfig}.
 	 *
-	 * @return the converted {@link ConfigWithHost}.
+	 * @return the converted {@link RedisConfig}.
 	 */
-	public ConfigWithHost parseConfiguration() {
+	public RedisConfig parseConfiguration() {
 		return parseConfiguration(getClass().getClassLoader());
 	}
 
 	/**
-	 * Parses the Config and builds a new {@link ConfigWithHost}.
+	 * Parses the Config and builds a new {@link RedisConfig}.
 	 *
 	 * @param the
 	 *            {@link ClassLoader} used to load the
 	 *            {@code memcached.properties} file in classpath.
-	 * @return the converted {@link ConfigWithHost}.
+	 * @return the converted {@link RedisConfig}.
 	 */
-	public ConfigWithHost parseConfiguration(ClassLoader classLoader) {
+	public RedisConfig parseConfiguration(ClassLoader classLoader) {
 		Properties config = new Properties();
 
 		InputStream input = classLoader.getResourceAsStream(redisPropertiesFilename);
@@ -96,14 +96,14 @@ final class RedisConfigurationBuilder {
 			}
 		}
 
-		ConfigWithHost jedisConfig = new ConfigWithHost();
+		RedisConfig jedisConfig = new RedisConfig();
 		jedisConfig.setHost("localhost");
 		setConfigProperties(config, jedisConfig);
 		return jedisConfig;
 	}
 
 	private void setConfigProperties(Properties properties,
-			ConfigWithHost jedisConfig) {
+			RedisConfig jedisConfig) {
 		if (properties != null) {
 			MetaObject metaCache = SystemMetaObject.forObject(jedisConfig);
 			for (Map.Entry<Object, Object> entry : properties.entrySet()) {
