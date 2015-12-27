@@ -97,7 +97,7 @@ final class RedisConfigurationBuilder {
 		}
 
 		RedisConfig jedisConfig = new RedisConfig();
-		jedisConfig.setHost("localhost");
+		jedisConfig.setHost(config.getProperty("redis.ip"));
 		setConfigProperties(config, jedisConfig);
 		return jedisConfig;
 	}
