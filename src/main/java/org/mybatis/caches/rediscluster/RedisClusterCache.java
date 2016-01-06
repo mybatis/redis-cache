@@ -16,7 +16,9 @@
 package org.mybatis.caches.rediscluster;
 
 import org.apache.ibatis.cache.Cache;
-import org.mybatis.caches.redis.*;
+import org.mybatis.caches.annotations.CacheConfigure;
+import org.mybatis.caches.redis.DummyReadWriteLock;
+import org.mybatis.caches.redis.SerializeUtil;
 import redis.clients.jedis.JedisCluster;
 
 import java.util.Map;

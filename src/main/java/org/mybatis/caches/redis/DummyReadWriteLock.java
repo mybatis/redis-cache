@@ -23,7 +23,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 /**
  * @author Iwao AVE!
  */
-class DummyReadWriteLock implements ReadWriteLock {
+public class DummyReadWriteLock implements ReadWriteLock {
 
     private Lock lock = new DummyLock();
 

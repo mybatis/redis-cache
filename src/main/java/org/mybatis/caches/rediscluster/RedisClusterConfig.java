@@ -21,6 +21,10 @@ import redis.clients.jedis.JedisPoolConfig;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * redisCluster config setting
+ * @author scotter
+ */
 public class RedisClusterConfig extends JedisPoolConfig {
     private String addressKeyPrefix = "redisCluster";
     private Integer timeout = 2000;

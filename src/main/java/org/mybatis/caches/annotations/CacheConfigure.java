@@ -21,7 +21,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by scotter on 15/12/24.
+ * Fix Mybatis issue #352, do not apply decorators to custom caches
+ * Add FlushInterval for redis cache
+ * @author scotter
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

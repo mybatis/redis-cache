@@ -28,9 +28,8 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 
 /**
- * Converter from the Config to a proper {@link RedisConfig}.
- *
- * @author Eduardo Macarron
+ * Converter from the Config to a proper {@link RedisClusterConfig}.
+ *  @author scotter
  */
 final class RedisClusterConfigurationBuilder {
 
