@@ -45,14 +45,14 @@ public final class RedisClusterCache implements Cache {
         jedisCluster = new JedisCluster(clusterConfig.getHaps(), clusterConfig.getTimeout(),
                 clusterConfig.getMaxRedirections(), clusterConfig);
 
-        resolveCacheConfigure();
+        resolveCacheConfigure(id);
     }
 
     /**
-     * 加载自定义配置文件
-     * 注意,此时的ID必须是一个准确的Java Type类型
+     * loading CacheConfigure by id
+     * if id can't convert to Class, ignore CacheConfigure
      */
-    private void resolveCacheConfigure() {
+    private void resolveCacheConfigure(final String id) {
         try {
             Class<?> type = Class.forName(id);
             CacheConfigure cacheConfigure = type.getAnnotation(CacheConfigure.class);
@@ -60,7 +60,7 @@ public final class RedisClusterCache implements Cache {
                 flushInterval = cacheConfigure.flushInterval();
             }
         } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("Cache ID is not a Java Type", e);
+//            throw new IllegalArgumentException("Cache ID is not a Java Type", e);
         }
     }
 
@@ -113,7 +113,7 @@ public final class RedisClusterCache implements Cache {
 
     @Override
     public String toString() {
-        return "Redis {" + id + "}";
+        return "RedisCluster {" + id + "}";
     }
 
 }

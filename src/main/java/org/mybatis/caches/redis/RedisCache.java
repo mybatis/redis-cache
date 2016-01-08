@@ -1,17 +1,17 @@
 /**
- * Copyright 2015 the original author or authors.
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *    Copyright 2015 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
  */
 package org.mybatis.caches.redis;
 
@@ -48,13 +48,15 @@ public final class RedisCache implements Cache {
         pool = new JedisPool(redisConfig, redisConfig.getHost(), redisConfig.getPort(),
                 redisConfig.getConnectionTimeout(), redisConfig.getSoTimeout(), redisConfig.getPassword(),
                 redisConfig.getDatabase(), redisConfig.getClientName());
+
+        resolveCacheConfigure(id);
     }
 
     /**
-     * 加载自定义配置文件
-     * 注意,此时的ID必须是一个准确的Java Type类型
+     * loading CacheConfigure by id
+     * if id can't convert to Class, ignore CacheConfigure
      */
-    private void resolveCacheConfigure() {
+    private void resolveCacheConfigure(final String id) {
         try {
             Class<?> type = Class.forName(id);
             CacheConfigure cacheConfigure = type.getAnnotation(CacheConfigure.class);
@@ -62,7 +64,7 @@ public final class RedisCache implements Cache {
                 flushInterval = cacheConfigure.flushInterval();
             }
         } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("Cache ID is not a Java Type", e);
+//            throw new IllegalArgumentException("Cache ID is not a Java Type", e);
         }
     }
 
