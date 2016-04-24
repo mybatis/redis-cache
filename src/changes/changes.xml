@@ -16,9 +16,6 @@
        limitations under the License.
 
 -->
-<!--
-  version: $Id: pom.xml 5144 2012-04-13 08:17:59Z simone.tripodi $
--->
 <document xmlns="http://maven.apache.org/changes/1.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">

@@ -15,7 +15,5 @@
  */
 /**
  * Contains Redis support for MyBatis Cache.
- *
- * @version $Id$
  */
 package org.mybatis.caches.redis;
