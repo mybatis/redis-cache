@@ -28,7 +28,7 @@
   <body>
     <section name="MyBatis Redis integration - Reference Documentation">
 
-    <p><a href="http://redis.org/">Redis</a> is an in-memory key-value store for small chunks of arbitrary data
+    <p><a href="http://redis.io/">Redis</a> is an in-memory key-value store for small chunks of arbitrary data
     (strings, objects) from results of database calls, API calls, or page rendering..</p>
     <p>The Redis integration is built on top of the <code>Jedis</code> client, written by Jonathan Leibiusky.</p>
     <p>Users that want to use Redis into their applications, have to download the
