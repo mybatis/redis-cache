@@ -17,7 +17,6 @@ package org.mybatis.caches.redis;
 
 import redis.clients.jedis.Jedis;
 
-@FunctionalInterface
 public interface RedisCallback {
 
     Object doWithRedis(Jedis jedis);
