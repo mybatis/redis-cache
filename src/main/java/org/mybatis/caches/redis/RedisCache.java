@@ -48,6 +48,7 @@ public final class RedisCache implements Cache {
             redisConfig.getSslSocketFactory(), redisConfig.getSslParameters(), redisConfig.getHostnameVerifier());
   }
 
+  // TODO Review this is UNUSED
   private Object execute(RedisCallback callback) {
     Jedis jedis = pool.getResource();
     try {
@@ -67,7 +68,7 @@ public final class RedisCache implements Cache {
     return (Integer) execute(new RedisCallback() {
       @Override
       public Object doWithRedis(Jedis jedis) {
-        Map<byte[], byte[]> result = jedis.hgetAll(id.toString().getBytes());
+        Map<byte[], byte[]> result = jedis.hgetAll(id.getBytes());
         return result.size();
       }
     });
@@ -78,7 +79,7 @@ public final class RedisCache implements Cache {
     execute(new RedisCallback() {
       @Override
       public Object doWithRedis(Jedis jedis) {
-        jedis.hset(id.toString().getBytes(), key.toString().getBytes(), SerializeUtil.serialize(value));
+        jedis.hset(id.getBytes(), key.toString().getBytes(), SerializeUtil.serialize(value));
         return null;
       }
     });
@@ -89,7 +90,7 @@ public final class RedisCache implements Cache {
     return execute(new RedisCallback() {
       @Override
       public Object doWithRedis(Jedis jedis) {
-        return SerializeUtil.unserialize(jedis.hget(id.toString().getBytes(), key.toString().getBytes()));
+        return SerializeUtil.unserialize(jedis.hget(id.getBytes(), key.toString().getBytes()));
       }
     });
   }
@@ -99,7 +100,7 @@ public final class RedisCache implements Cache {
     return execute(new RedisCallback() {
       @Override
       public Object doWithRedis(Jedis jedis) {
-        return jedis.hdel(id.toString(), key.toString());
+        return jedis.hdel(id, key.toString());
       }
     });
   }
@@ -109,7 +110,7 @@ public final class RedisCache implements Cache {
     execute(new RedisCallback() {
       @Override
       public Object doWithRedis(Jedis jedis) {
-        jedis.del(id.toString());
+        jedis.del(id);
         return null;
       }
     });

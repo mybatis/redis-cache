@@ -24,6 +24,10 @@ import org.apache.ibatis.cache.CacheException;
 
 public final class SerializeUtil {
 
+    private SerializeUtil() {
+        // prevent instantiation
+    }
+
     public static byte[] serialize(Object object) {
         ObjectOutputStream oos = null;
         ByteArrayOutputStream baos = null;
@@ -31,8 +35,7 @@ public final class SerializeUtil {
             baos = new ByteArrayOutputStream();
             oos = new ObjectOutputStream(baos);
             oos.writeObject(object);
-            byte[] bytes = baos.toByteArray();
-            return bytes;
+            return baos.toByteArray();
         } catch (Exception e) {
             throw new CacheException(e);
         }
