@@ -36,6 +36,8 @@ public final class RedisCache implements Cache {
 
   private static JedisPool pool;
 
+  private Integer timeout;
+
   public RedisCache(final String id) {
     if (id == null) {
       throw new IllegalArgumentException("Cache instances require an ID");
@@ -79,7 +81,11 @@ public final class RedisCache implements Cache {
     execute(new RedisCallback() {
       @Override
       public Object doWithRedis(Jedis jedis) {
-        jedis.hset(id.getBytes(), key.toString().getBytes(), SerializeUtil.serialize(value));
+        final byte[] idBytes = id.getBytes();
+        jedis.hset(idBytes, key.toString().getBytes(), SerializeUtil.serialize(value));
+        if (timeout != null && jedis.ttl(idBytes) == -1) {
+          jedis.expire(idBytes, timeout);
+        }
         return null;
       }
     });
@@ -125,6 +131,10 @@ public final class RedisCache implements Cache {
   @Override
   public String toString() {
     return "Redis {" + id + "}";
+  }
+
+  public void setTimeout(Integer timeout) {
+    this.timeout = timeout;
   }
 
 }
