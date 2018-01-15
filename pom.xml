@@ -85,6 +85,15 @@
       <version>2.9.0</version>
       <scope>compile</scope>
     </dependency>
+    
+    <!--
+     | kryo dependencies
+    -->
+    <dependency>
+        <groupId>com.esotericsoftware</groupId>
+        <artifactId>kryo</artifactId>
+        <version>4.0.1</version>
+    </dependency>
 
     <!--
      | trick to fix javadoc generation
