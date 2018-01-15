@@ -16,45 +16,41 @@
 package org.mybatis.caches.redis;
 
 
-import org.apache.ibatis.cache.CacheException;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 
-public final class SerializeUtil {
+/**
+ * SerializeUtil with Kryo, which is faster and space consuming.
+ *
+ * @author Lei Jiang(ladd.cn@gmail.com)
+ */
+public final class KryoSerializer {
 
-    private SerializeUtil() {
+	static Kryo kryo;
+	static Output output;
+	static Input input;
+	static
+	{
+		kryo=new Kryo();
+		output=new Output(200,-1);
+		input=new Input();
+	}
+	
+    private KryoSerializer() {
         // prevent instantiation
     }
 
     public static byte[] serialize(Object object) {
-    	 try {
-    		//use kryo serialize first
- 			return KryoSerializer.serialize(object);
- 		} catch (Exception e) {
- 			//if kryo serialize fails, user jdk serialize as a fallback
- 			try {
- 				return JDKSerializer.serialize(object);
- 			} catch (CacheException cacheException ) {
- 				throw cacheException;
- 			}
- 			
- 		}
+		kryo.register(object.getClass());
+    	output.clear();
+    	kryo.writeClassAndObject(output, object);
+        return output.toBytes();
     }
 
     public static Object unserialize(byte[] bytes) {
-        if (bytes == null) {
-            return null;
-        }
-        try {
-        	//use kryo unserialize first
-			return KryoSerializer.unserialize(bytes);
-		} catch (Exception e) {
-			//if kryo unserialize fails, user jdk unserialize as a fallback
-			try {
-				return JDKSerializer.unserialize(bytes);
-			} catch (CacheException cacheException ) {
-				throw cacheException;
-			}
-			
-		}
+    	input.setBuffer(bytes);
+        return kryo.readClassAndObject(input);
     }
 
 }
