@@ -15,7 +15,6 @@
  */
 package org.mybatis.caches.redis;
 
-
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
@@ -27,30 +26,29 @@ import com.esotericsoftware.kryo.io.Output;
  */
 public final class KryoSerializer {
 
-	static Kryo kryo;
-	static Output output;
-	static Input input;
-	static
-	{
-		kryo=new Kryo();
-		output=new Output(200,-1);
-		input=new Input();
-	}
-	
-    private KryoSerializer() {
-        // prevent instantiation
-    }
+  static Kryo kryo;
+  static Output output;
+  static Input input;
+  static {
+    kryo = new Kryo();
+    output = new Output(200, -1);
+    input = new Input();
+  }
 
-    public static byte[] serialize(Object object) {
-		kryo.register(object.getClass());
-    	output.clear();
-    	kryo.writeClassAndObject(output, object);
-        return output.toBytes();
-    }
+  private KryoSerializer() {
+    // prevent instantiation
+  }
 
-    public static Object unserialize(byte[] bytes) {
-    	input.setBuffer(bytes);
-        return kryo.readClassAndObject(input);
-    }
+  public static byte[] serialize(Object object) {
+    kryo.register(object.getClass());
+    output.clear();
+    kryo.writeClassAndObject(output, object);
+    return output.toBytes();
+  }
+
+  public static Object unserialize(byte[] bytes) {
+    input.setBuffer(bytes);
+    return kryo.readClassAndObject(input);
+  }
 
 }

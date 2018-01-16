@@ -22,8 +22,6 @@ import static org.junit.Assert.assertNull;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
-
 /**
  * Test with Ubuntu
  * sudo apt-get install redis-server
@@ -82,6 +80,5 @@ public final class RedisTestCase {
   public void shouldVerifyToString() {
     assertEquals("Redis {REDIS}", cache.toString());
   }
-  
 
 }
