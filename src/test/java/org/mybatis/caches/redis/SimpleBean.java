@@ -18,72 +18,74 @@ package org.mybatis.caches.redis;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class SimpleBean implements Serializable{
-	/**
-	 * 
-	 */
-//	private static final long serialVersionUID = 1L;
-	String name;
-	int age;
-	int grade;
-	String sex;
-	ArrayList<String> courses;
-	
-	
-	public SimpleBean() {
-		// TODO Auto-generated constructor stub
-		this.name="Kobe Bryant";
-		this.age=40;
-		this.grade=12;
-		this.sex="MALE";
-		this.courses=new ArrayList<String>();
-		this.courses.add("English");
-		this.courses.add("Math");
-		this.courses.add("Physics");
-	}
-	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public int getAge() {
-		return age;
-	}
-	public void setAge(int age) {
-		this.age = age;
-	}
-	public int getGrade() {
-		return grade;
-	}
-	public void setGrade(int grade) {
-		this.grade = grade;
-	}
-	public String getSex() {
-		return sex;
-	}
-	public void setSex(String sex) {
-		this.sex = sex;
-	}
+public class SimpleBean implements Serializable {
+  /**
+   * 
+   */
+  //	private static final long serialVersionUID = 1L;
+  String name;
+  int age;
+  int grade;
+  String sex;
+  ArrayList<String> courses;
 
-	@Override
-	public String toString() {
-		return "StudentInfo [name=" + name + ", age=" + age + ", grade="
-				+ grade + ", sex=" + sex + "]";
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		if(obj==null)
-			return false;
-		if(!obj.getClass().equals(SimpleBean.class))
-			return false;
-		return this.toString().equals(obj.toString());
-	}
-	
-	
-	
-	
+  public SimpleBean() {
+    // TODO Auto-generated constructor stub
+    this.name = "Kobe Bryant";
+    this.age = 40;
+    this.grade = 12;
+    this.sex = "MALE";
+    this.courses = new ArrayList<String>();
+    this.courses.add("English");
+    this.courses.add("Math");
+    this.courses.add("Physics");
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public int getAge() {
+    return age;
+  }
+
+  public void setAge(int age) {
+    this.age = age;
+  }
+
+  public int getGrade() {
+    return grade;
+  }
+
+  public void setGrade(int grade) {
+    this.grade = grade;
+  }
+
+  public String getSex() {
+    return sex;
+  }
+
+  public void setSex(String sex) {
+    this.sex = sex;
+  }
+
+  @Override
+  public String toString() {
+    return "StudentInfo [name=" + name + ", age=" + age + ", grade=" + grade + ", sex=" + sex + "]";
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    // TODO Auto-generated method stub
+    if (obj == null)
+      return false;
+    if (!obj.getClass().equals(SimpleBean.class))
+      return false;
+    return this.toString().equals(obj.toString());
+  }
+
 }

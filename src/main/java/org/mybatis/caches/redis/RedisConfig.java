@@ -1,5 +1,5 @@
 /**
- *    Copyright 2015-2017 the original author or authors.
+ *    Copyright 2015-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,113 +24,113 @@ import redis.clients.jedis.Protocol;
 
 public class RedisConfig extends JedisPoolConfig {
 
-    private String host = Protocol.DEFAULT_HOST;
-    private int port = Protocol.DEFAULT_PORT;
-    private int connectionTimeout = Protocol.DEFAULT_TIMEOUT;
-    private int soTimeout = Protocol.DEFAULT_TIMEOUT;
-    private String password;
-    private int database = Protocol.DEFAULT_DATABASE;
-    private String clientName;
-    private boolean ssl;
-    private SSLSocketFactory sslSocketFactory;
-    private SSLParameters sslParameters;
-    private HostnameVerifier hostnameVerifier;
+  private String host = Protocol.DEFAULT_HOST;
+  private int port = Protocol.DEFAULT_PORT;
+  private int connectionTimeout = Protocol.DEFAULT_TIMEOUT;
+  private int soTimeout = Protocol.DEFAULT_TIMEOUT;
+  private String password;
+  private int database = Protocol.DEFAULT_DATABASE;
+  private String clientName;
+  private boolean ssl;
+  private SSLSocketFactory sslSocketFactory;
+  private SSLParameters sslParameters;
+  private HostnameVerifier hostnameVerifier;
 
-    public boolean isSsl() {
-        return ssl;
-    }
+  public boolean isSsl() {
+    return ssl;
+  }
 
-    public void setSsl(boolean ssl) {
-        this.ssl = ssl;
-    }
+  public void setSsl(boolean ssl) {
+    this.ssl = ssl;
+  }
 
-    public SSLSocketFactory getSslSocketFactory() {
-        return sslSocketFactory;
-    }
+  public SSLSocketFactory getSslSocketFactory() {
+    return sslSocketFactory;
+  }
 
-    public void setSslSocketFactory(SSLSocketFactory sslSocketFactory) {
-        this.sslSocketFactory = sslSocketFactory;
-    }
+  public void setSslSocketFactory(SSLSocketFactory sslSocketFactory) {
+    this.sslSocketFactory = sslSocketFactory;
+  }
 
-    public SSLParameters getSslParameters() {
-        return sslParameters;
-    }
+  public SSLParameters getSslParameters() {
+    return sslParameters;
+  }
 
-    public void setSslParameters(SSLParameters sslParameters) {
-        this.sslParameters = sslParameters;
-    }
+  public void setSslParameters(SSLParameters sslParameters) {
+    this.sslParameters = sslParameters;
+  }
 
-    public HostnameVerifier getHostnameVerifier() {
-        return hostnameVerifier;
-    }
+  public HostnameVerifier getHostnameVerifier() {
+    return hostnameVerifier;
+  }
 
-    public void setHostnameVerifier(HostnameVerifier hostnameVerifier) {
-        this.hostnameVerifier = hostnameVerifier;
-    }
+  public void setHostnameVerifier(HostnameVerifier hostnameVerifier) {
+    this.hostnameVerifier = hostnameVerifier;
+  }
 
-    public String getHost() {
-        return host;
-    }
+  public String getHost() {
+    return host;
+  }
 
-    public void setHost(String host) {
-        if (host == null || "".equals(host)) {
-            host = Protocol.DEFAULT_HOST;
-        }
-        this.host = host;
+  public void setHost(String host) {
+    if (host == null || "".equals(host)) {
+      host = Protocol.DEFAULT_HOST;
     }
+    this.host = host;
+  }
 
-    public int getPort() {
-        return port;
-    }
+  public int getPort() {
+    return port;
+  }
 
-    public void setPort(int port) {
-        this.port = port;
-    }
+  public void setPort(int port) {
+    this.port = port;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public void setPassword(String password) {
-        if ("".equals(password)) {
-            password = null;
-        }
-        this.password = password;
+  public void setPassword(String password) {
+    if ("".equals(password)) {
+      password = null;
     }
+    this.password = password;
+  }
 
-    public int getDatabase() {
-        return database;
-    }
+  public int getDatabase() {
+    return database;
+  }
 
-    public void setDatabase(int database) {
-        this.database = database;
-    }
+  public void setDatabase(int database) {
+    this.database = database;
+  }
 
-    public String getClientName() {
-        return clientName;
-    }
+  public String getClientName() {
+    return clientName;
+  }
 
-    public void setClientName(String clientName) {
-        if ("".equals(clientName)) {
-            clientName = null;
-        }
-        this.clientName = clientName;
+  public void setClientName(String clientName) {
+    if ("".equals(clientName)) {
+      clientName = null;
     }
+    this.clientName = clientName;
+  }
 
-    public int getConnectionTimeout() {
-        return connectionTimeout;
-    }
+  public int getConnectionTimeout() {
+    return connectionTimeout;
+  }
 
-    public void setConnectionTimeout(int connectionTimeout) {
-        this.connectionTimeout = connectionTimeout;
-    }
+  public void setConnectionTimeout(int connectionTimeout) {
+    this.connectionTimeout = connectionTimeout;
+  }
 
-    public int getSoTimeout() {
-        return soTimeout;
-    }
+  public int getSoTimeout() {
+    return soTimeout;
+  }
 
-    public void setSoTimeout(int soTimeout) {
-        this.soTimeout = soTimeout;
-    }
+  public void setSoTimeout(int soTimeout) {
+    this.soTimeout = soTimeout;
+  }
 
 }
