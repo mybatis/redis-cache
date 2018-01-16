@@ -15,26 +15,29 @@
  */
 package org.mybatis.caches.redis;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import org.apache.ibatis.cache.CacheException;
 
-public final class SerializeUtil {
+public class JDKSerializer {
 
-  private SerializeUtil() {
+  private JDKSerializer() {
     // prevent instantiation
   }
 
   public static byte[] serialize(Object object) {
+    ObjectOutputStream oos = null;
+    ByteArrayOutputStream baos = null;
     try {
-      //use kryo serialize first
-      return KryoSerializer.serialize(object);
+      baos = new ByteArrayOutputStream();
+      oos = new ObjectOutputStream(baos);
+      oos.writeObject(object);
+      return baos.toByteArray();
     } catch (Exception e) {
-      //if kryo serialize fails, user jdk serialize as a fallback
-      try {
-        return JDKSerializer.serialize(object);
-      } catch (CacheException cacheException) {
-        throw cacheException;
-      }
-
+      throw new CacheException(e);
     }
   }
 
@@ -42,17 +45,13 @@ public final class SerializeUtil {
     if (bytes == null) {
       return null;
     }
+    ByteArrayInputStream bais = null;
     try {
-      //use kryo unserialize first
-      return KryoSerializer.unserialize(bytes);
+      bais = new ByteArrayInputStream(bytes);
+      ObjectInputStream ois = new ObjectInputStream(bais);
+      return ois.readObject();
     } catch (Exception e) {
-      //if kryo unserialize fails, user jdk unserialize as a fallback
-      try {
-        return JDKSerializer.unserialize(bytes);
-      } catch (CacheException cacheException) {
-        throw cacheException;
-      }
-
+      throw new CacheException(e);
     }
   }
 
