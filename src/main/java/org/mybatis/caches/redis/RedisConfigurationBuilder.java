@@ -104,6 +104,13 @@ final class RedisConfigurationBuilder {
       MetaObject metaCache = SystemMetaObject.forObject(jedisConfig);
       for (Map.Entry<Object, Object> entry : properties.entrySet()) {
         String name = (String) entry.getKey();
+        // All prefix of 'redis.' on property values
+        if (name !=null && name.startsWith("redis.")) {
+          name = name.substring(6);
+        } else {
+          // Skip non prefixed properties
+          continue;
+        }
         String value = (String) entry.getValue();
         if (metaCache.hasSetter(name)) {
           Class<?> type = metaCache.getSetterType(name);
