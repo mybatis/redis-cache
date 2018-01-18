@@ -1,5 +1,5 @@
 /**
- *    Copyright 2015-2017 the original author or authors.
+ *    Copyright 2015-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,46 +15,45 @@
  */
 package org.mybatis.caches.redis;
 
-
 import org.apache.ibatis.cache.CacheException;
 
 public final class SerializeUtil {
 
-    private SerializeUtil() {
-        // prevent instantiation
-    }
+  private SerializeUtil() {
+    // prevent instantiation
+  }
 
-    public static byte[] serialize(Object object) {
-    	 try {
-    		//use kryo serialize first
- 			return KryoSerializer.serialize(object);
- 		} catch (Exception e) {
- 			//if kryo serialize fails, user jdk serialize as a fallback
- 			try {
- 				return JDKSerializer.serialize(object);
- 			} catch (CacheException cacheException ) {
- 				throw cacheException;
- 			}
- 			
- 		}
-    }
+  public static byte[] serialize(Object object) {
+    try {
+      //use kryo serialize first
+      return KryoSerializer.serialize(object);
+    } catch (Exception e) {
+      //if kryo serialize fails, user jdk serialize as a fallback
+      try {
+        return JDKSerializer.serialize(object);
+      } catch (CacheException cacheException) {
+        throw cacheException;
+      }
 
-    public static Object unserialize(byte[] bytes) {
-        if (bytes == null) {
-            return null;
-        }
-        try {
-        	//use kryo unserialize first
-			return KryoSerializer.unserialize(bytes);
-		} catch (Exception e) {
-			//if kryo unserialize fails, user jdk unserialize as a fallback
-			try {
-				return JDKSerializer.unserialize(bytes);
-			} catch (CacheException cacheException ) {
-				throw cacheException;
-			}
-			
-		}
     }
+  }
+
+  public static Object unserialize(byte[] bytes) {
+    if (bytes == null) {
+      return null;
+    }
+    try {
+      //use kryo unserialize first
+      return KryoSerializer.unserialize(bytes);
+    } catch (Exception e) {
+      //if kryo unserialize fails, user jdk unserialize as a fallback
+      try {
+        return JDKSerializer.unserialize(bytes);
+      } catch (CacheException cacheException) {
+        throw cacheException;
+      }
+
+    }
+  }
 
 }
