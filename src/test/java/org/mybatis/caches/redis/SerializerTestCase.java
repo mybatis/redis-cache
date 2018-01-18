@@ -19,6 +19,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+
 public class SerializerTestCase {
 
   int max = 1000000;
@@ -39,6 +42,18 @@ public class SerializerTestCase {
       KryoSerializer.unserialize(serialBytes);
     }
 
+    assertEquals(rawSimpleBean, unserializeSimpleBean);
+
+  }
+  
+  @Test
+  public void testKryoUnserializeWithoutRegistry () {
+    SimpleBean rawSimpleBean = new SimpleBean();
+
+    byte[] serialBytes = KryoSerializer.serialize(rawSimpleBean);
+    Kryo kryoWithoutRegisty=new Kryo();
+    Input input=new Input(serialBytes);
+    SimpleBean unserializeSimpleBean = (SimpleBean) kryoWithoutRegisty.readClassAndObject(input);
     assertEquals(rawSimpleBean, unserializeSimpleBean);
 
   }

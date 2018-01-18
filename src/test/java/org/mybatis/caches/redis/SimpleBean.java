@@ -22,7 +22,7 @@ public class SimpleBean implements Serializable {
   /**
    * 
    */
-  //	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
   String name;
   int age;
   int grade;

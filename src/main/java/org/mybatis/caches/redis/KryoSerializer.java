@@ -26,9 +26,9 @@ import com.esotericsoftware.kryo.io.Output;
  */
 public final class KryoSerializer {
 
-  static Kryo kryo;
-  static Output output;
-  static Input input;
+  private static Kryo kryo;
+  private static Output output;
+  private static Input input;
   static {
     kryo = new Kryo();
     output = new Output(200, -1);
@@ -40,7 +40,17 @@ public final class KryoSerializer {
   }
 
   public static byte[] serialize(Object object) {
-    kryo.register(object.getClass());
+	  /**
+	   * The following line is removed because it will lead to unserialize bug in the following situation:
+       * Start redis-server
+       * Start web application.
+       * Execute query and some objects are cached. -> Class is registered
+       * Stop web application.
+       * Start web application. -> KryoSerializer is initialized and no Class is registered yet.
+       * Execute the same query and Redis returns the cached objects as bytes.
+       * KryoSerializer#unserialize() is invoked, but it fails because Class is unknown.
+	   */
+//    kryo.register(object.getClass());
     output.clear();
     kryo.writeClassAndObject(output, object);
     return output.toBytes();
