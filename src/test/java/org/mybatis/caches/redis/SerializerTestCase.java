@@ -45,14 +45,14 @@ public class SerializerTestCase {
     assertEquals(rawSimpleBean, unserializeSimpleBean);
 
   }
-  
+
   @Test
-  public void testKryoUnserializeWithoutRegistry () {
+  public void testKryoUnserializeWithoutRegistry() {
     SimpleBean rawSimpleBean = new SimpleBean();
 
     byte[] serialBytes = KryoSerializer.serialize(rawSimpleBean);
-    Kryo kryoWithoutRegisty=new Kryo();
-    Input input=new Input(serialBytes);
+    Kryo kryoWithoutRegisty = new Kryo();
+    Input input = new Input(serialBytes);
     SimpleBean unserializeSimpleBean = (SimpleBean) kryoWithoutRegisty.readClassAndObject(input);
     assertEquals(rawSimpleBean, unserializeSimpleBean);
 

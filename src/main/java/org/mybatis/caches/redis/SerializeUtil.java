@@ -24,36 +24,14 @@ public final class SerializeUtil {
   }
 
   public static byte[] serialize(Object object) {
-    try {
-      //use kryo serialize first
-      return KryoSerializer.serialize(object);
-    } catch (Exception e) {
-      //if kryo serialize fails, user jdk serialize as a fallback
-      try {
-        return JDKSerializer.serialize(object);
-      } catch (CacheException cacheException) {
-        throw cacheException;
-      }
-
-    }
+    return KryoSerializer.serialize(object);
   }
 
   public static Object unserialize(byte[] bytes) {
-    if (bytes == null) {
+    if (bytes == null || bytes.length == 0) {
       return null;
     }
-    try {
-      //use kryo unserialize first
-      return KryoSerializer.unserialize(bytes);
-    } catch (Exception e) {
-      //if kryo unserialize fails, user jdk unserialize as a fallback
-      try {
-        return JDKSerializer.unserialize(bytes);
-      } catch (CacheException cacheException) {
-        throw cacheException;
-      }
-
-    }
+    return KryoSerializer.unserialize(bytes);
   }
 
 }
