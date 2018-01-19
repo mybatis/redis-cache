@@ -25,28 +25,27 @@ import com.esotericsoftware.kryo.serializers.ExternalizableSerializer;
 import com.esotericsoftware.kryo.serializers.JavaSerializer;
 
 /**
- * SerializeUtil with Kryo, which is faster and space consuming.
+ * SerializeUtil with Kryo, which is faster and more space consuming.
  *
  * @author Lei Jiang(ladd.cn@gmail.com)
  */
-public final class KryoSerializer {
+public enum KryoSerializer implements Serializer{
+	//Enum singleton, which is preferred approach since Java 1.5
+	INSTANCE;
+	
+  private Kryo kryo;
+  private Output output;
+  private Input input;
+  private HashSet<Class> beanClassToSerialize;//classes have been occurred
 
-  private static Kryo kryo;
-  private static Output output;
-  private static Input input;
-  private static HashSet<Class> beanClassToSerialize;//classes have been occurred
-  static {
-    kryo = new Kryo();
+  private KryoSerializer() {
+  	kryo = new Kryo();
     output = new Output(200, -1);
     input = new Input();
     beanClassToSerialize = new HashSet<Class>();
   }
 
-  private KryoSerializer() {
-    // prevent instantiation
-  }
-
-  public static byte[] serialize(Object object) {
+  public  byte[] serialize(Object object) {
     output.clear();
     if (!beanClassToSerialize.contains(object.getClass())) {
       //A new class occurs
@@ -81,7 +80,7 @@ public final class KryoSerializer {
     return output.toBytes();
   }
 
-  public static Object unserialize(byte[] bytes) {
+  public  Object unserialize(byte[] bytes) {
     input.setBuffer(bytes);
     return kryo.readClassAndObject(input);
   }

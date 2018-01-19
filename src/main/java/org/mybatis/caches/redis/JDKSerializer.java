@@ -22,13 +22,15 @@ import java.io.ObjectOutputStream;
 
 import org.apache.ibatis.cache.CacheException;
 
-public class JDKSerializer {
+public enum JDKSerializer implements Serializer{
+	//Enum singleton, which is preferred approach since Java 1.5
+	INSTANCE;
 
   private JDKSerializer() {
     // prevent instantiation
   }
 
-  public static byte[] serialize(Object object) {
+  public byte[] serialize(Object object) {
     ObjectOutputStream oos = null;
     ByteArrayOutputStream baos = null;
     try {
@@ -41,7 +43,7 @@ public class JDKSerializer {
     }
   }
 
-  public static Object unserialize(byte[] bytes) {
+  public Object unserialize(byte[] bytes) {
     if (bytes == null) {
       return null;
     }

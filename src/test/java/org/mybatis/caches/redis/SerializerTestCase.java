@@ -17,6 +17,7 @@ package org.mybatis.caches.redis;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -25,21 +26,31 @@ import com.esotericsoftware.kryo.io.Input;
 public class SerializerTestCase {
 
   int max = 1000000;
+  
+  Serializer kryoSerializer;
+  Serializer jdkSerializer;
+  
+  @Before
+  public void setup()
+  {
+  	kryoSerializer=KryoSerializer.INSTANCE;
+  	jdkSerializer=JDKSerializer.INSTANCE;
+  }
 
   @Test
   public void testKryoSerialize() {
     SimpleBean rawSimpleBean = new SimpleBean();
 
     for (int i = 0; i != max; ++i) {
-      KryoSerializer.serialize(rawSimpleBean);
+      kryoSerializer.serialize(rawSimpleBean);
     }
 
-    byte[] serialBytes = KryoSerializer.serialize(rawSimpleBean);
+    byte[] serialBytes = kryoSerializer.serialize(rawSimpleBean);
     System.out.println("Byte size after kryo serialize " + serialBytes.length);
-    SimpleBean unserializeSimpleBean = (SimpleBean) KryoSerializer.unserialize(serialBytes);
+    SimpleBean unserializeSimpleBean = (SimpleBean) kryoSerializer.unserialize(serialBytes);
 
     for (int i = 0; i != max; ++i) {
-      KryoSerializer.unserialize(serialBytes);
+      kryoSerializer.unserialize(serialBytes);
     }
 
     assertEquals(rawSimpleBean, unserializeSimpleBean);
@@ -50,7 +61,7 @@ public class SerializerTestCase {
   public void testKryoUnserializeWithoutRegistry() {
     SimpleBean rawSimpleBean = new SimpleBean();
 
-    byte[] serialBytes = KryoSerializer.serialize(rawSimpleBean);
+    byte[] serialBytes = kryoSerializer.serialize(rawSimpleBean);
     Kryo kryoWithoutRegisty = new Kryo();
     Input input = new Input(serialBytes);
     SimpleBean unserializeSimpleBean = (SimpleBean) kryoWithoutRegisty.readClassAndObject(input);
@@ -63,15 +74,15 @@ public class SerializerTestCase {
     SimpleBean rawSimpleBean = new SimpleBean();
 
     for (int i = 0; i != max; ++i) {
-      JDKSerializer.serialize(rawSimpleBean);
+      jdkSerializer.serialize(rawSimpleBean);
     }
 
-    byte[] serialBytes = JDKSerializer.serialize(rawSimpleBean);
+    byte[] serialBytes = jdkSerializer.serialize(rawSimpleBean);
     System.out.println("Byte size after jdk serialize " + serialBytes.length);
-    SimpleBean unserializeSimpleBean = (SimpleBean) JDKSerializer.unserialize(serialBytes);
+    SimpleBean unserializeSimpleBean = (SimpleBean) jdkSerializer.unserialize(serialBytes);
 
     for (int i = 0; i != max; ++i) {
-      JDKSerializer.unserialize(serialBytes);
+      jdkSerializer.unserialize(serialBytes);
     }
 
     assertEquals(rawSimpleBean, unserializeSimpleBean);

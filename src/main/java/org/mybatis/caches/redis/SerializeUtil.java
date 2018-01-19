@@ -18,20 +18,27 @@ package org.mybatis.caches.redis;
 import org.apache.ibatis.cache.CacheException;
 
 public final class SerializeUtil {
-
+	
+	private static Serializer serializer;
+	
+	static
+	{
+		serializer=KryoSerializer.INSTANCE;
+	}
+	
   private SerializeUtil() {
     // prevent instantiation
   }
 
   public static byte[] serialize(Object object) {
-    return KryoSerializer.serialize(object);
+    return serializer.serialize(object);
   }
 
   public static Object unserialize(byte[] bytes) {
     if (bytes == null || bytes.length == 0) {
       return null;
     }
-    return KryoSerializer.unserialize(bytes);
+    return serializer.unserialize(bytes);
   }
 
 }
