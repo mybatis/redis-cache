@@ -111,4 +111,10 @@ public class SerializerTestCase {
     assertEquals(rawSimpleBean, unserializeSimpleBean);
 
   }
+  
+  @Test
+  public void testSerializeCofig() {
+	RedisConfig redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
+	assertTrue(redisConfig.getSerializer().equals("kryo"));
+  }
 }
