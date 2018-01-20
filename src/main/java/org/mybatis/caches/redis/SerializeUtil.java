@@ -18,14 +18,13 @@ package org.mybatis.caches.redis;
 import org.apache.ibatis.cache.CacheException;
 
 public final class SerializeUtil {
-	
-	private static Serializer serializer;
-	
-	static
-	{
-		serializer=KryoSerializer.INSTANCE;
-	}
-	
+
+  private static Serializer serializer;
+
+  static {
+    serializer = KryoSerializer.INSTANCE;
+  }
+
   private SerializeUtil() {
     // prevent instantiation
   }

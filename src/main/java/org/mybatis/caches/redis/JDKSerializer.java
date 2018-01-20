@@ -22,9 +22,9 @@ import java.io.ObjectOutputStream;
 
 import org.apache.ibatis.cache.CacheException;
 
-public enum JDKSerializer implements Serializer{
-	//Enum singleton, which is preferred approach since Java 1.5
-	INSTANCE;
+public enum JDKSerializer implements Serializer {
+  //Enum singleton, which is preferred approach since Java 1.5
+  INSTANCE;
 
   private JDKSerializer() {
     // prevent instantiation

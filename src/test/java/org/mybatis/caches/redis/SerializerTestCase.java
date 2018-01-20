@@ -22,19 +22,20 @@ import org.junit.Test;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.JavaSerializer;
 
 public class SerializerTestCase {
 
   int max = 1000000;
-  
+
   Serializer kryoSerializer;
   Serializer jdkSerializer;
-  
+
   @Before
-  public void setup()
-  {
-  	kryoSerializer=KryoSerializer.INSTANCE;
-  	jdkSerializer=JDKSerializer.INSTANCE;
+  public void setup() {
+    kryoSerializer = KryoSerializer.INSTANCE;
+    jdkSerializer = JDKSerializer.INSTANCE;
   }
 
   @Test
@@ -53,6 +54,17 @@ public class SerializerTestCase {
       kryoSerializer.unserialize(serialBytes);
     }
 
+    assertEquals(rawSimpleBean, unserializeSimpleBean);
+
+  }
+
+  @Test
+  public void testKryoFallbackSerialize() {
+
+    SimpleBean rawSimpleBean = new SimpleBean();
+    byte[] serialBytes = jdkSerializer.serialize(rawSimpleBean);
+    
+    SimpleBean unserializeSimpleBean = (SimpleBean) kryoSerializer.unserialize(serialBytes);
     assertEquals(rawSimpleBean, unserializeSimpleBean);
 
   }

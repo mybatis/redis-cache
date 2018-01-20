@@ -16,6 +16,7 @@
 package org.mybatis.caches.redis;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashSet;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -29,60 +30,86 @@ import com.esotericsoftware.kryo.serializers.JavaSerializer;
  *
  * @author Lei Jiang(ladd.cn@gmail.com)
  */
-public enum KryoSerializer implements Serializer{
-	//Enum singleton, which is preferred approach since Java 1.5
-	INSTANCE;
+public enum KryoSerializer implements Serializer {
+  //Enum singleton, which is preferred approach since Java 1.5
+  INSTANCE;
+
 	
+
   private Kryo kryo;
   private Output output;
   private Input input;
-  private HashSet<Class> beanClassToSerialize;//classes have been occurred
+  /**
+   * Classes which can not resolved by default kryo serializer, 
+   * which occurs very rare(https://github.com/EsotericSoftware/kryo#using-standard-java-serialization)
+   * For these classes, we will use fallbackSerializer(use JDKSerializer now) to resolve.
+   */
+  private HashSet<Class> unnormalClassSet;
+  
+  /**
+   * Hash codes of unnormal bytes which can not resolved by default kryo serializer,
+   * which will be resolved by  fallbackSerializer
+   */
+  private HashSet<Integer> unnormalBytesHashCodeSet;
+  private Serializer fallbackSerializer;
 
   private KryoSerializer() {
-  	kryo = new Kryo();
+    kryo = new Kryo();
     output = new Output(200, -1);
     input = new Input();
-    beanClassToSerialize = new HashSet<Class>();
+    unnormalClassSet = new HashSet<Class>();
+    unnormalBytesHashCodeSet=new HashSet<Integer>();
+    fallbackSerializer=JDKSerializer.INSTANCE;//use JDKSerializer as fallback 
   }
 
-  public  byte[] serialize(Object object) {
+  public byte[] serialize(Object object) {
     output.clear();
-    if (!beanClassToSerialize.contains(object.getClass())) {
-      //A new class occurs
-      try {
-        /**
-         * The following line is removed because it will lead to unserialize bug in the following situation:
-         * Start redis-server
-         * Start web application.
-         * Execute query and some objects are cached. -> Class is registered
-         * Stop web application.
-         * Start web application. -> KryoSerializer is initialized and no Class is registered yet.
-         * Execute the same query and Redis returns the cached objects as bytes.
-         * KryoSerializer#unserialize() is invoked, but it fails because Class is unknown.
-         */
-        //  			kryo.register(object.getClass());
-        kryo.writeClassAndObject(output, object);
-      } catch (Exception e) {
-        // if default kryo serializer fails, register  javaSerializer or externalizableSerializer as a fallback
-        if (object instanceof Serializable) {
-          kryo.register(object.getClass(), new JavaSerializer());
-        } else if (object instanceof ExternalizableSerializer) {
-          kryo.register(object.getClass(), new ExternalizableSerializer());
-        }
-        kryo.writeClassAndObject(output, object);
-      } finally {
-        beanClassToSerialize.add(object.getClass());
-      }
-    } else {
-      //For class ever occurred, serialize directly
-      kryo.writeClassAndObject(output, object);
+    if(!unnormalClassSet.contains(object.getClass()))
+    {
+    	/**
+    	 * In the following cases:
+    	 * 1. This class occurs for the first time.
+    	 * 2. This class have occured and can be resolved by default kryo serializer 
+    	 */
+    	try {
+    		kryo.writeClassAndObject(output, object);
+    		return output.toBytes();
+		} catch (Exception e) {
+			// For unnormal class occurred for the first time, exception will be thrown
+			unnormalClassSet.add(object.getClass());
+			return fallbackSerializer.serialize(object);//use fallback Serializer to resolve
+		}
     }
-    return output.toBytes();
+    else 
+    {
+    	//For unnormal class
+    	return fallbackSerializer.serialize(object);
+	}
   }
 
-  public  Object unserialize(byte[] bytes) {
-    input.setBuffer(bytes);
-    return kryo.readClassAndObject(input);
+  public Object unserialize(byte[] bytes) {	  
+	int hashCode=Arrays.hashCode(bytes);
+	if(!unnormalBytesHashCodeSet.contains(hashCode))
+    {
+    	/**
+    	 * In the following cases:
+    	 * 1. This bytes occurs for the first time.
+    	 * 2. This bytes have occured and can be resolved by default kryo serializer 
+    	 */
+    	try {
+    		input.setBuffer(bytes);
+    	    return kryo.readClassAndObject(input);
+		} catch (Exception e) {
+			// For unnormal bytes occurred for the first time, exception will be thrown
+			unnormalBytesHashCodeSet.add(hashCode);
+			return fallbackSerializer.unserialize(bytes);//use fallback Serializer to resolve
+		}
+    }
+    else 
+    {
+    	//For unnormal bytes
+    	return fallbackSerializer.unserialize(bytes);
+	}
   }
 
 }
