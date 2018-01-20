@@ -18,7 +18,7 @@ package org.mybatis.caches.redis;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class SimpleBean implements Serializable {
+public class SimpleBeanStudentInfo implements Serializable {
   /**
    * 
    */
@@ -29,7 +29,7 @@ public class SimpleBean implements Serializable {
   String sex;
   ArrayList<String> courses;
 
-  public SimpleBean() {
+  public SimpleBeanStudentInfo() {
     // TODO Auto-generated constructor stub
     this.name = "Kobe Bryant";
     this.age = 40;
@@ -83,7 +83,7 @@ public class SimpleBean implements Serializable {
     // TODO Auto-generated method stub
     if (obj == null)
       return false;
-    if (!obj.getClass().equals(SimpleBean.class))
+    if (!obj.getClass().equals(SimpleBeanStudentInfo.class))
       return false;
     return this.toString().equals(obj.toString());
   }
