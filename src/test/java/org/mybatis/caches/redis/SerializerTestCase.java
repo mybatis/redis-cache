@@ -99,6 +99,10 @@ public class SerializerTestCase {
     SimpleBeanCourseInfo rawSimpleBean = new SimpleBeanCourseInfo();
 
     InputStream inputStream=SerializerTestCase.class.getClass().getResourceAsStream("/simpleBeanCourseInfoSerializedFile");
+    if(inputStream==null)
+    {
+      return;
+    }
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
     int nRead;
