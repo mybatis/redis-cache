@@ -39,7 +39,7 @@ public enum KryoSerializer implements Serializer {
    * which occurs very rare(https://github.com/EsotericSoftware/kryo#using-standard-java-serialization)
    * For these classes, we will use fallbackSerializer(use JDKSerializer now) to resolve.
    */
-  private HashSet<Class> unnormalClassSet;
+  private HashSet<Class<?>> unnormalClassSet;
 
   /**
    * Hash codes of unnormal bytes which can not resolved by default kryo serializer,
@@ -52,7 +52,7 @@ public enum KryoSerializer implements Serializer {
     kryo = new Kryo();
     output = new Output(200, -1);
     input = new Input();
-    unnormalClassSet = new HashSet<Class>();
+    unnormalClassSet = new HashSet<Class<?>>();
     unnormalBytesHashCodeSet = new HashSet<Integer>();
     fallbackSerializer = JDKSerializer.INSTANCE;//use JDKSerializer as fallback 
   }
@@ -80,6 +80,9 @@ public enum KryoSerializer implements Serializer {
   }
 
   public Object unserialize(byte[] bytes) {
+    if (bytes == null) {
+      return null;
+    }
     int hashCode = Arrays.hashCode(bytes);
     if (!unnormalBytesHashCodeSet.contains(hashCode)) {
       /**

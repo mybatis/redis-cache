@@ -18,7 +18,6 @@ package org.mybatis.caches.redis;
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -42,6 +41,17 @@ public class SerializerTestCase {
   }
 
   @Test
+  public void testKryoUnserializeNull() {
+    Object obj = kryoSerializer.unserialize(null);
+    assertNull(obj);
+  }
+
+  @Test
+  public void testJDKUnserializeNull() {
+    Object obj = jdkSerializer.unserialize(null);
+    assertNull(obj);
+  }
+
   public void testKryoSerialize() {
     SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
 
@@ -50,7 +60,6 @@ public class SerializerTestCase {
     }
 
     byte[] serialBytes = kryoSerializer.serialize(rawSimpleBean);
-    System.out.println("Byte size after kryo serialize " + serialBytes.length);
     SimpleBeanStudentInfo unserializeSimpleBean = (SimpleBeanStudentInfo) kryoSerializer.unserialize(serialBytes);
 
     for (int i = 0; i != max; ++i) {
@@ -123,7 +132,6 @@ public class SerializerTestCase {
     }
 
     byte[] serialBytes = jdkSerializer.serialize(rawSimpleBean);
-    System.out.println("Byte size after jdk serialize " + serialBytes.length);
     SimpleBeanStudentInfo unserializeSimpleBean = (SimpleBeanStudentInfo) jdkSerializer.unserialize(serialBytes);
 
     for (int i = 0; i != max; ++i) {
@@ -135,19 +143,8 @@ public class SerializerTestCase {
   }
 
   @Test
-  public void testSerializeUtil() {
-    SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
-
-    byte[] serialBytes = SerializeUtil.serialize(rawSimpleBean);
-    SimpleBeanStudentInfo unserializeSimpleBean = (SimpleBeanStudentInfo) SerializeUtil.unserialize(serialBytes);
-
-    assertEquals(rawSimpleBean, unserializeSimpleBean);
-
-  }
-
-  @Test
   public void testSerializeCofig() {
     RedisConfig redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
-    assertTrue(redisConfig.getSerializer().equals("jdk"));
+    assertEquals(JDKSerializer.class, redisConfig.getSerializer().getClass());
   }
 }

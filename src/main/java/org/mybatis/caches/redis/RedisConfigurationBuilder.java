@@ -112,7 +112,14 @@ final class RedisConfigurationBuilder {
           continue;
         }
         String value = (String) entry.getValue();
-        if (metaCache.hasSetter(name)) {
+        if ("serializer".equals(name)) {
+          if ("kryo".equalsIgnoreCase(value)) {
+            jedisConfig.setSerializer(KryoSerializer.INSTANCE);
+          } else if (!"jdk".equalsIgnoreCase(value)) {
+            // Custom serializer is not supported yet.
+            throw new CacheException("Unknown serializer: '" + value + "'");
+          }
+        } else if (metaCache.hasSetter(name)) {
           Class<?> type = metaCache.getSetterType(name);
           if (String.class == type) {
             metaCache.setValue(name, value);

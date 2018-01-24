@@ -35,7 +35,7 @@ public class RedisConfig extends JedisPoolConfig {
   private SSLSocketFactory sslSocketFactory;
   private SSLParameters sslParameters;
   private HostnameVerifier hostnameVerifier;
-  private String serializer = "jdk";
+  private Serializer serializer = JDKSerializer.INSTANCE;
 
   public boolean isSsl() {
     return ssl;
@@ -134,11 +134,11 @@ public class RedisConfig extends JedisPoolConfig {
     this.soTimeout = soTimeout;
   }
 
-  public String getSerializer() {
+  public Serializer getSerializer() {
     return serializer;
   }
 
-  public void setSerializer(String serializer) {
+  public void setSerializer(Serializer serializer) {
     this.serializer = serializer;
   }
 
