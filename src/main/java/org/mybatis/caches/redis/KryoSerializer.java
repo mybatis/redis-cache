@@ -21,8 +21,6 @@ import java.util.HashSet;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.ExternalizableSerializer;
-import com.esotericsoftware.kryo.serializers.JavaSerializer;
 
 /**
  * SerializeUtil with Kryo, which is faster and more space consuming.
