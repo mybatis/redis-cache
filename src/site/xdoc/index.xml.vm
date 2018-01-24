@@ -57,6 +57,12 @@
   There is an additional parameter <code>redis.host</code> to set the Redis server host name; if not set "localhost" will be used.</p>
 
   <p>All properties are prefixed with 'redis' to avoid issues with other property types such as host.</p>
+
+  <p>To set cache TTL, set the value in seconds to <code>timeout</code> property.</p>
+  <source><![CDATA[<cache type="org.mybatis.caches.redis.RedisCache">
+  <property name="timeout" value="3" />
+</cache>]]></source>
+  <source><![CDATA[@CacheNamespace(properties = { @Property(name = "timeout", value = "3") })]]></source>
         </section>
     </body>
 
