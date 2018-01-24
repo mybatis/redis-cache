@@ -22,15 +22,12 @@ public final class SerializeUtil {
   private static Serializer serializer;
 
   static {
-	RedisConfig redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
-	if("jdk".equals(redisConfig.getSerializer()))
-	{
-		serializer=JDKSerializer.INSTANCE;
-	}
-	else
-	{
-		serializer=KryoSerializer.INSTANCE;
-	}
+    RedisConfig redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
+    if ("kryo".equals(redisConfig.getSerializer())) {
+      serializer = KryoSerializer.INSTANCE;
+    } else {
+      serializer = JDKSerializer.INSTANCE;
+    }
   }
 
   private SerializeUtil() {

@@ -22,13 +22,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-
 import org.junit.Before;
 import org.junit.Test;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
-
 
 public class SerializerTestCase {
 
@@ -68,8 +66,7 @@ public class SerializerTestCase {
 
     SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
     byte[] serialBytes = jdkSerializer.serialize(rawSimpleBean);
-    
-    
+
     SimpleBeanStudentInfo unserializeSimpleBean = (SimpleBeanStudentInfo) kryoSerializer.unserialize(serialBytes);
     assertEquals(rawSimpleBean, unserializeSimpleBean);
 
@@ -80,15 +77,14 @@ public class SerializerTestCase {
     SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
 
     byte[] serialBytes = kryoSerializer.serialize(rawSimpleBean);
-    
+
     Kryo kryoWithoutRegisty = new Kryo();
     Input input = new Input(serialBytes);
     SimpleBeanStudentInfo unserializeSimpleBean = (SimpleBeanStudentInfo) kryoWithoutRegisty.readClassAndObject(input);
     assertEquals(rawSimpleBean, unserializeSimpleBean);
 
   }
-  
-  
+
   /**
    * SimpleBeanSerializedFile contains serialized bytes of an default object of simpleBeanCourceInfo.
    * KryoSerializer can unserialize from bytes of file derectly
@@ -98,9 +94,9 @@ public class SerializerTestCase {
   public void testKryoUnserializeWithoutRegistryWithFile() throws IOException {
     SimpleBeanCourseInfo rawSimpleBean = new SimpleBeanCourseInfo();
 
-    InputStream inputStream=SerializerTestCase.class.getClass().getResourceAsStream("/simpleBeanCourseInfoSerializedFile");
-    if(inputStream==null)
-    {
+    InputStream inputStream = SerializerTestCase.class.getClass()
+        .getResourceAsStream("/simpleBeanCourseInfoSerializedFile");
+    if (inputStream == null) {
       return;
     }
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -112,14 +108,11 @@ public class SerializerTestCase {
       buffer.write(data, 0, nRead);
     }
     buffer.flush();
-    
+
     SimpleBeanCourseInfo unserializeSimpleBean = (SimpleBeanCourseInfo) SerializeUtil.unserialize(data);
     assertEquals(rawSimpleBean, unserializeSimpleBean);
 
   }
-  
-  
-  
 
   @Test
   public void testJDKSerialize() {
@@ -151,10 +144,10 @@ public class SerializerTestCase {
     assertEquals(rawSimpleBean, unserializeSimpleBean);
 
   }
-  
+
   @Test
   public void testSerializeCofig() {
-	RedisConfig redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
-	assertTrue(redisConfig.getSerializer().equals("kryo"));
+    RedisConfig redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
+    assertTrue(redisConfig.getSerializer().equals("jdk"));
   }
 }

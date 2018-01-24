@@ -39,20 +39,17 @@ public class SimpleBeanCourseInfo implements Serializable {
     this.name = name;
   }
 
- 
-  
-  
   public int getId() {
-	return id;
+    return id;
   }
 
   public void setId(int id) {
-	this.id = id;
+    this.id = id;
   }
 
   @Override
   public String toString() {
-    return "CourseInfo [name=" + name + ", id=" + id  + "]";
+    return "CourseInfo [name=" + name + ", id=" + id + "]";
   }
 
   @Override
