@@ -17,46 +17,125 @@ package org.mybatis.caches.redis;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.junit.Before;
 import org.junit.Test;
+
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
 
 public class SerializerTestCase {
 
   int max = 1000000;
 
+  Serializer kryoSerializer;
+  Serializer jdkSerializer;
+
+  @Before
+  public void setup() {
+    kryoSerializer = KryoSerializer.INSTANCE;
+    jdkSerializer = JDKSerializer.INSTANCE;
+  }
+
   @Test
+  public void testKryoUnserializeNull() {
+    Object obj = kryoSerializer.unserialize(null);
+    assertNull(obj);
+  }
+
+  @Test
+  public void testJDKUnserializeNull() {
+    Object obj = jdkSerializer.unserialize(null);
+    assertNull(obj);
+  }
+
   public void testKryoSerialize() {
-    SimpleBean rawSimpleBean = new SimpleBean();
+    SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
 
     for (int i = 0; i != max; ++i) {
-      KryoSerializer.serialize(rawSimpleBean);
+      kryoSerializer.serialize(rawSimpleBean);
     }
 
-    byte[] serialBytes = KryoSerializer.serialize(rawSimpleBean);
-    System.out.println("Byte size after kryo serialize " + serialBytes.length);
-    SimpleBean unserializeSimpleBean = (SimpleBean) KryoSerializer.unserialize(serialBytes);
+    byte[] serialBytes = kryoSerializer.serialize(rawSimpleBean);
+    SimpleBeanStudentInfo unserializeSimpleBean = (SimpleBeanStudentInfo) kryoSerializer.unserialize(serialBytes);
 
     for (int i = 0; i != max; ++i) {
-      KryoSerializer.unserialize(serialBytes);
+      kryoSerializer.unserialize(serialBytes);
     }
 
+    assertEquals(rawSimpleBean, unserializeSimpleBean);
+
+  }
+
+  @Test
+  public void testKryoFallbackSerialize() throws IOException {
+
+    SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
+    byte[] serialBytes = jdkSerializer.serialize(rawSimpleBean);
+
+    SimpleBeanStudentInfo unserializeSimpleBean = (SimpleBeanStudentInfo) kryoSerializer.unserialize(serialBytes);
+    assertEquals(rawSimpleBean, unserializeSimpleBean);
+
+  }
+
+  @Test
+  public void testKryoUnserializeWithoutRegistry() throws IOException {
+    SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
+
+    byte[] serialBytes = kryoSerializer.serialize(rawSimpleBean);
+
+    Kryo kryoWithoutRegisty = new Kryo();
+    Input input = new Input(serialBytes);
+    SimpleBeanStudentInfo unserializeSimpleBean = (SimpleBeanStudentInfo) kryoWithoutRegisty.readClassAndObject(input);
+    assertEquals(rawSimpleBean, unserializeSimpleBean);
+
+  }
+
+  /**
+   * SimpleBeanSerializedFile contains serialized bytes of an default object of simpleBeanCourceInfo.
+   * KryoSerializer can unserialize from bytes of file derectly
+   * @throws IOException
+   */
+  @Test
+  public void testKryoUnserializeWithoutRegistryWithFile() throws IOException {
+    SimpleBeanCourseInfo rawSimpleBean = new SimpleBeanCourseInfo();
+
+    InputStream inputStream = SerializerTestCase.class.getClass()
+        .getResourceAsStream("/simpleBeanCourseInfoSerializedFile");
+    if (inputStream == null) {
+      return;
+    }
+    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+    int nRead;
+    byte[] data = new byte[1000];
+
+    while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+      buffer.write(data, 0, nRead);
+    }
+    buffer.flush();
+
+    SimpleBeanCourseInfo unserializeSimpleBean = (SimpleBeanCourseInfo) kryoSerializer.unserialize(data);
     assertEquals(rawSimpleBean, unserializeSimpleBean);
 
   }
 
   @Test
   public void testJDKSerialize() {
-    SimpleBean rawSimpleBean = new SimpleBean();
+    SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
 
     for (int i = 0; i != max; ++i) {
-      JDKSerializer.serialize(rawSimpleBean);
+      jdkSerializer.serialize(rawSimpleBean);
     }
 
-    byte[] serialBytes = JDKSerializer.serialize(rawSimpleBean);
-    System.out.println("Byte size after jdk serialize " + serialBytes.length);
-    SimpleBean unserializeSimpleBean = (SimpleBean) JDKSerializer.unserialize(serialBytes);
+    byte[] serialBytes = jdkSerializer.serialize(rawSimpleBean);
+    SimpleBeanStudentInfo unserializeSimpleBean = (SimpleBeanStudentInfo) jdkSerializer.unserialize(serialBytes);
 
     for (int i = 0; i != max; ++i) {
-      JDKSerializer.unserialize(serialBytes);
+      jdkSerializer.unserialize(serialBytes);
     }
 
     assertEquals(rawSimpleBean, unserializeSimpleBean);
@@ -64,13 +143,8 @@ public class SerializerTestCase {
   }
 
   @Test
-  public void testSerializeUtil() {
-    SimpleBean rawSimpleBean = new SimpleBean();
-
-    byte[] serialBytes = SerializeUtil.serialize(rawSimpleBean);
-    SimpleBean unserializeSimpleBean = (SimpleBean) SerializeUtil.unserialize(serialBytes);
-
-    assertEquals(rawSimpleBean, unserializeSimpleBean);
-
+  public void testSerializeCofig() {
+    RedisConfig redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
+    assertEquals(JDKSerializer.class, redisConfig.getSerializer().getClass());
   }
 }

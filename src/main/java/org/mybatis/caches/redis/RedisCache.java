@@ -36,6 +36,8 @@ public final class RedisCache implements Cache {
 
   private static JedisPool pool;
 
+  private final RedisConfig redisConfig;
+
   private Integer timeout;
 
   public RedisCache(final String id) {
@@ -43,7 +45,7 @@ public final class RedisCache implements Cache {
       throw new IllegalArgumentException("Cache instances require an ID");
     }
     this.id = id;
-    RedisConfig redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
+    redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
     pool = new JedisPool(redisConfig, redisConfig.getHost(), redisConfig.getPort(), redisConfig.getConnectionTimeout(),
         redisConfig.getSoTimeout(), redisConfig.getPassword(), redisConfig.getDatabase(), redisConfig.getClientName(),
         redisConfig.isSsl(), redisConfig.getSslSocketFactory(), redisConfig.getSslParameters(),
@@ -82,7 +84,7 @@ public final class RedisCache implements Cache {
       @Override
       public Object doWithRedis(Jedis jedis) {
         final byte[] idBytes = id.getBytes();
-        jedis.hset(idBytes, key.toString().getBytes(), SerializeUtil.serialize(value));
+        jedis.hset(idBytes, key.toString().getBytes(), redisConfig.getSerializer().serialize(value));
         if (timeout != null && jedis.ttl(idBytes) == -1) {
           jedis.expire(idBytes, timeout);
         }
@@ -96,7 +98,7 @@ public final class RedisCache implements Cache {
     return execute(new RedisCallback() {
       @Override
       public Object doWithRedis(Jedis jedis) {
-        return SerializeUtil.unserialize(jedis.hget(id.getBytes(), key.toString().getBytes()));
+        return redisConfig.getSerializer().unserialize(jedis.hget(id.getBytes(), key.toString().getBytes()));
       }
     });
   }

@@ -17,10 +17,12 @@ package org.mybatis.caches.redis;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
 
 import org.apache.ibatis.cache.CacheException;
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 
@@ -36,17 +38,14 @@ final class RedisConfigurationBuilder {
    */
   private static final RedisConfigurationBuilder INSTANCE = new RedisConfigurationBuilder();
 
-  private static final String SYSTEM_PROPERTY_REDIS_PROPERTIES_FILENAME = "redis.properties.filename";
+  protected static final String SYSTEM_PROPERTY_REDIS_PROPERTIES_FILENAME = "redis.properties.filename";
 
-  private static final String REDIS_RESOURCE = "redis.properties";
-
-  private final String redisPropertiesFilename;
+  protected static final String REDIS_RESOURCE = "redis.properties";
 
   /**
    * Hidden constructor, this class can't be instantiated.
    */
   private RedisConfigurationBuilder() {
-    redisPropertiesFilename = System.getProperty(SYSTEM_PROPERTY_REDIS_PROPERTIES_FILENAME, REDIS_RESOURCE);
   }
 
   /**
@@ -78,6 +77,7 @@ final class RedisConfigurationBuilder {
   public RedisConfig parseConfiguration(ClassLoader classLoader) {
     Properties config = new Properties();
 
+    String redisPropertiesFilename = System.getProperty(SYSTEM_PROPERTY_REDIS_PROPERTIES_FILENAME, REDIS_RESOURCE);
     InputStream input = classLoader.getResourceAsStream(redisPropertiesFilename);
     if (input != null) {
       try {
@@ -104,8 +104,24 @@ final class RedisConfigurationBuilder {
       MetaObject metaCache = SystemMetaObject.forObject(jedisConfig);
       for (Map.Entry<Object, Object> entry : properties.entrySet()) {
         String name = (String) entry.getKey();
+        // All prefix of 'redis.' on property values
+        if (name != null && name.startsWith("redis.")) {
+          name = name.substring(6);
+        } else {
+          // Skip non prefixed properties
+          continue;
+        }
         String value = (String) entry.getValue();
-        if (metaCache.hasSetter(name)) {
+        if ("serializer".equals(name)) {
+          if ("kryo".equalsIgnoreCase(value)) {
+            jedisConfig.setSerializer(KryoSerializer.INSTANCE);
+          } else if (!"jdk".equalsIgnoreCase(value)) {
+            // Custom serializer is not supported yet.
+            throw new CacheException("Unknown serializer: '" + value + "'");
+          }
+        } else if (Arrays.asList("sslSocketFactory", "sslParameters", "hostnameVerifier").contains(name)) {
+          setInstance(metaCache, name, value);
+        } else if (metaCache.hasSetter(name)) {
           Class<?> type = metaCache.getSetterType(name);
           if (String.class == type) {
             metaCache.setValue(name, value);
@@ -128,6 +144,18 @@ final class RedisConfigurationBuilder {
           }
         }
       }
+    }
+  }
+
+  protected void setInstance(MetaObject metaCache, String name, String value) {
+    if (value == null || value.isEmpty()) {
+      return;
+    }
+    try {
+      Class<?> clazz = Resources.classForName(value);
+      metaCache.setValue(name, clazz.newInstance());
+    } catch (Exception e) {
+      throw new CacheException("Could not instantiate class: '" + value + "'.");
     }
   }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2015-2016 the original author or authors.
+       Copyright 2015-2018 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@
     <section name="MyBatis Redis integration - Reference Documentation">
 
     <p><a href="http://redis.io/">Redis</a> is an in-memory key-value store for small chunks of arbitrary data
-    (strings, objects) from results of database calls, API calls, or page rendering..</p>
+    (strings, objects) from results of database calls, API calls, or page rendering.</p>
     <p>The Redis integration is built on top of the <code>Jedis</code> client, written by Jonathan Leibiusky.</p>
     <p>Users that want to use Redis into their applications, have to download the
     <a href="https://github.com/mybatis/redis-cache/releases">zip bundle</a>, decompress it and add the jars in the classpath;
@@ -54,8 +54,9 @@
   if not found, the client will use the default setting.</p>
   
   <p>Any property found in the configuration file will be set as a property to the bean <code>JedisConfigPool</code>.
-  There is an additional parameter <code>host</code> to set the Redis server host name; if not set "localhost" will be used.</p>
+  There is an additional parameter <code>redis.host</code> to set the Redis server host name; if not set "localhost" will be used.</p>
 
+  <p>All properties are prefixed with 'redis' to avoid issues with other property types such as host.</p>
         </section>
     </body>
 
