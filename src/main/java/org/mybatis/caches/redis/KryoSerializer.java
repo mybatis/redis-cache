@@ -15,7 +15,6 @@
  */
 package org.mybatis.caches.redis;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -66,7 +65,7 @@ public enum KryoSerializer implements Serializer {
       /**
        * In the following cases:
        * 1. This class occurs for the first time.
-       * 2. This class have occured and can be resolved by default kryo serializer 
+       * 2. This class have occurred and can be resolved by default kryo serializer 
        */
       try {
         kryo.writeClassAndObject(output, object);
@@ -88,7 +87,7 @@ public enum KryoSerializer implements Serializer {
       /**
        * In the following cases:
        * 1. This bytes occurs for the first time.
-       * 2. This bytes have occured and can be resolved by default kryo serializer 
+       * 2. This bytes have occurred and can be resolved by default kryo serializer 
        */
       try {
         input.setBuffer(bytes);
