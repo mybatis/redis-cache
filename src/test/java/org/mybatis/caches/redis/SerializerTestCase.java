@@ -109,7 +109,7 @@ public class SerializerTestCase {
     }
     buffer.flush();
 
-    SimpleBeanCourseInfo unserializeSimpleBean = (SimpleBeanCourseInfo) SerializeUtil.unserialize(data);
+    SimpleBeanCourseInfo unserializeSimpleBean = (SimpleBeanCourseInfo) kryoSerializer.unserialize(data);
     assertEquals(rawSimpleBean, unserializeSimpleBean);
 
   }
