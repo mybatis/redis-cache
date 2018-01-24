@@ -19,41 +19,30 @@ import org.apache.ibatis.cache.CacheException;
 
 public final class SerializeUtil {
 
+  private static Serializer serializer;
+
+  static {
+    RedisConfig redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
+    if ("kryo".equals(redisConfig.getSerializer())) {
+      serializer = KryoSerializer.INSTANCE;
+    } else {
+      serializer = JDKSerializer.INSTANCE;
+    }
+  }
+
   private SerializeUtil() {
     // prevent instantiation
   }
 
   public static byte[] serialize(Object object) {
-    try {
-      //use kryo serialize first
-      return KryoSerializer.serialize(object);
-    } catch (Exception e) {
-      //if kryo serialize fails, user jdk serialize as a fallback
-      try {
-        return JDKSerializer.serialize(object);
-      } catch (CacheException cacheException) {
-        throw cacheException;
-      }
-
-    }
+    return serializer.serialize(object);
   }
 
   public static Object unserialize(byte[] bytes) {
-    if (bytes == null) {
+    if (bytes == null || bytes.length == 0) {
       return null;
     }
-    try {
-      //use kryo unserialize first
-      return KryoSerializer.unserialize(bytes);
-    } catch (Exception e) {
-      //if kryo unserialize fails, user jdk unserialize as a fallback
-      try {
-        return JDKSerializer.unserialize(bytes);
-      } catch (CacheException cacheException) {
-        throw cacheException;
-      }
-
-    }
+    return serializer.unserialize(bytes);
   }
 
 }
