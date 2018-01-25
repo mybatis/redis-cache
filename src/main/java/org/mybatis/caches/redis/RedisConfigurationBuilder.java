@@ -151,12 +151,14 @@ final class RedisConfigurationBuilder {
     if (value == null || value.isEmpty()) {
       return;
     }
+    Object instance;
     try {
       Class<?> clazz = Resources.classForName(value);
-      metaCache.setValue(name, clazz.newInstance());
+      instance = clazz.newInstance();
     } catch (Exception e) {
-      throw new CacheException("Could not instantiate class: '" + value + "'.");
+      throw new CacheException("Could not instantiate class: '" + value + "'.", e);
     }
+    metaCache.setValue(name, instance);
   }
 
 }
