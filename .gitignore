@@ -17,3 +17,4 @@
 /src/docbkx
 velocity.log
 /bin
+.mvn/wrapper/maven-wrapper.jar
