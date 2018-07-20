@@ -34,10 +34,16 @@ public enum JDKSerializer implements Serializer {
     ObjectOutputStream oos = null;
     ByteArrayOutputStream baos = null;
     try {
-      baos = new ByteArrayOutputStream();
-      oos = new ObjectOutputStream(baos);
-      oos.writeObject(object);
-      return baos.toByteArray();
+      try {
+        baos = new ByteArrayOutputStream();
+        oos = new ObjectOutputStream(baos);
+        oos.writeObject(object);
+        return baos.toByteArray();
+      } finally {
+        if (oos != null) {
+          oos.close();
+        }
+      }
     } catch (Exception e) {
       throw new CacheException(e);
     }
@@ -50,8 +56,15 @@ public enum JDKSerializer implements Serializer {
     ByteArrayInputStream bais = null;
     try {
       bais = new ByteArrayInputStream(bytes);
-      ObjectInputStream ois = new ObjectInputStream(bais);
-      return ois.readObject();
+      ObjectInputStream ois = null;
+      try {
+        ois = new ObjectInputStream(bais);
+        return ois.readObject();
+      } finally {
+        if (ois != null) {
+          ois.close();
+        }
+      }
     } catch (Exception e) {
       throw new CacheException(e);
     }
