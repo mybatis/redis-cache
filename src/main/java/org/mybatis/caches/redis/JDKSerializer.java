@@ -17,6 +17,7 @@ package org.mybatis.caches.redis;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -40,6 +41,14 @@ public enum JDKSerializer implements Serializer {
       return baos.toByteArray();
     } catch (Exception e) {
       throw new CacheException(e);
+    } finally {
+      if (oos != null) {
+        try {
+          oos.close();
+        } catch (IOException e) {
+          // ignore IOException
+        }
+      }
     }
   }
 
@@ -48,12 +57,21 @@ public enum JDKSerializer implements Serializer {
       return null;
     }
     ByteArrayInputStream bais = null;
+    ObjectInputStream ois = null;
     try {
       bais = new ByteArrayInputStream(bytes);
-      ObjectInputStream ois = new ObjectInputStream(bais);
+      ois = new ObjectInputStream(bais);
       return ois.readObject();
     } catch (Exception e) {
       throw new CacheException(e);
+    } finally {
+      if (ois != null) {
+        try {
+          ois.close();
+        } catch (IOException e) {
+          // ignore IOException
+        }
+      }
     }
   }
 
