@@ -17,6 +17,7 @@ package org.mybatis.caches.redis;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -34,18 +35,20 @@ public enum JDKSerializer implements Serializer {
     ObjectOutputStream oos = null;
     ByteArrayOutputStream baos = null;
     try {
-      try {
-        baos = new ByteArrayOutputStream();
-        oos = new ObjectOutputStream(baos);
-        oos.writeObject(object);
-        return baos.toByteArray();
-      } finally {
-        if (oos != null) {
-          oos.close();
-        }
-      }
+      baos = new ByteArrayOutputStream();
+      oos = new ObjectOutputStream(baos);
+      oos.writeObject(object);
+      return baos.toByteArray();
     } catch (Exception e) {
       throw new CacheException(e);
+    } finally {
+      if (oos != null) {
+        try {
+          oos.close();
+        } catch (IOException e) {
+          // ignore IOException
+        }
+      }
     }
   }
 
@@ -54,19 +57,21 @@ public enum JDKSerializer implements Serializer {
       return null;
     }
     ByteArrayInputStream bais = null;
+    ObjectInputStream ois = null;
     try {
       bais = new ByteArrayInputStream(bytes);
-      ObjectInputStream ois = null;
-      try {
-        ois = new ObjectInputStream(bais);
-        return ois.readObject();
-      } finally {
-        if (ois != null) {
-          ois.close();
-        }
-      }
+      ois = new ObjectInputStream(bais);
+      return ois.readObject();
     } catch (Exception e) {
       throw new CacheException(e);
+    } finally {
+      if (ois != null) {
+        try {
+          ois.close();
+        } catch (IOException e) {
+          // ignore IOException
+        }
+      }
     }
   }
 
