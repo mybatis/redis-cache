@@ -36,6 +36,7 @@ public class RedisConfig extends JedisPoolConfig {
   private SSLParameters sslParameters;
   private HostnameVerifier hostnameVerifier;
   private Serializer serializer = JDKSerializer.INSTANCE;
+  private String serializerClazz;
 
   public boolean isSsl() {
     return ssl;
@@ -142,4 +143,11 @@ public class RedisConfig extends JedisPoolConfig {
     this.serializer = serializer;
   }
 
+  public String getSerializerClazz() {
+    return serializerClazz;
+  }
+
+  public void setSerializerClazz(String serializerClazz) {
+    this.serializerClazz = serializerClazz;
+  }
 }

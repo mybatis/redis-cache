@@ -113,11 +113,37 @@ final class RedisConfigurationBuilder {
         }
         String value = (String) entry.getValue();
         if ("serializer".equals(name)) {
-          if ("kryo".equalsIgnoreCase(value)) {
-            jedisConfig.setSerializer(KryoSerializer.INSTANCE);
-          } else if (!"jdk".equalsIgnoreCase(value)) {
-            // Custom serializer is not supported yet.
-            throw new CacheException("Unknown serializer: '" + value + "'");
+          // if contains serializerClass config , ignore serializer property
+          if (!properties.containsKey("redis.serializerClass")) {
+            if ("kryo".equalsIgnoreCase(value)) {
+              jedisConfig.setSerializer(KryoSerializer.INSTANCE);
+            } else if (!"jdk".equalsIgnoreCase(value)) {
+              // Custom serializer is not supported yet.
+              throw new CacheException("Unknown serializer: '" + value + "'");
+            }
+          }
+        } else if ("serializerClass".equals(name)) {
+          if (value != null && !"".equals(value)) {
+            // user can define serializer class
+            Class<?> clazz = null;
+            try {
+              clazz = Class.forName(value);
+            } catch (ClassNotFoundException e) {
+              // if not found custom serializer class, use jdkSerializer for instead
+            }
+            if (clazz == null || !Serializer.class.isAssignableFrom(clazz)) {
+              // if clazz is not a serializer, use jdkSerializer for instead
+              jedisConfig.setSerializer(JDKSerializer.INSTANCE);
+            } else {
+              try {
+                Serializer serializer = (Serializer) clazz.newInstance();
+                jedisConfig.setSerializer(serializer);
+              } catch (Exception e) {
+                throw new CacheException("Unknown serializer class: '" + value + "'");
+              }
+            }
+          } else {
+            jedisConfig.setSerializer(JDKSerializer.INSTANCE);
           }
         } else if (Arrays.asList("sslSocketFactory", "sslParameters", "hostnameVerifier").contains(name)) {
           setInstance(metaCache, name, value);
