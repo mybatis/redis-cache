@@ -95,8 +95,9 @@ public class SerializerTestCase {
   }
 
   /**
-   * SimpleBeanSerializedFile contains serialized bytes of an default object of simpleBeanCourceInfo.
-   * KryoSerializer can unserialize from bytes of file derectly
+   * SimpleBeanSerializedFile contains serialized bytes of an default object of simpleBeanCourceInfo. KryoSerializer can
+   * unserialize from bytes of file derectly
+   * 
    * @throws IOException
    */
   @Test

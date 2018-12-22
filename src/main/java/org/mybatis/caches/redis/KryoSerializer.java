@@ -28,22 +28,22 @@ import com.esotericsoftware.kryo.io.Output;
  * @author Lei Jiang(ladd.cn@gmail.com)
  */
 public enum KryoSerializer implements Serializer {
-  //Enum singleton, which is preferred approach since Java 1.5
+  // Enum singleton, which is preferred approach since Java 1.5
   INSTANCE;
 
   private Kryo kryo;
   private Output output;
   private Input input;
   /**
-   * Classes which can not resolved by default kryo serializer, 
-   * which occurs very rare(https://github.com/EsotericSoftware/kryo#using-standard-java-serialization)
-   * For these classes, we will use fallbackSerializer(use JDKSerializer now) to resolve.
+   * Classes which can not resolved by default kryo serializer, which occurs very
+   * rare(https://github.com/EsotericSoftware/kryo#using-standard-java-serialization) For these classes, we will use
+   * fallbackSerializer(use JDKSerializer now) to resolve.
    */
   private HashSet<Class<?>> unnormalClassSet;
 
   /**
-   * Hash codes of unnormal bytes which can not resolved by default kryo serializer,
-   * which will be resolved by  fallbackSerializer
+   * Hash codes of unnormal bytes which can not resolved by default kryo serializer, which will be resolved by
+   * fallbackSerializer
    */
   private HashSet<Integer> unnormalBytesHashCodeSet;
   private Serializer fallbackSerializer;
@@ -54,16 +54,15 @@ public enum KryoSerializer implements Serializer {
     input = new Input();
     unnormalClassSet = new HashSet<Class<?>>();
     unnormalBytesHashCodeSet = new HashSet<Integer>();
-    fallbackSerializer = JDKSerializer.INSTANCE;//use JDKSerializer as fallback 
+    fallbackSerializer = JDKSerializer.INSTANCE;// use JDKSerializer as fallback
   }
 
   public byte[] serialize(Object object) {
     output.clear();
     if (!unnormalClassSet.contains(object.getClass())) {
       /**
-       * In the following cases:
-       * 1. This class occurs for the first time.
-       * 2. This class have occurred and can be resolved by default kryo serializer 
+       * In the following cases: 1. This class occurs for the first time. 2. This class have occurred and can be
+       * resolved by default kryo serializer
        */
       try {
         kryo.writeClassAndObject(output, object);
@@ -71,10 +70,10 @@ public enum KryoSerializer implements Serializer {
       } catch (Exception e) {
         // For unnormal class occurred for the first time, exception will be thrown
         unnormalClassSet.add(object.getClass());
-        return fallbackSerializer.serialize(object);//use fallback Serializer to resolve
+        return fallbackSerializer.serialize(object);// use fallback Serializer to resolve
       }
     } else {
-      //For unnormal class
+      // For unnormal class
       return fallbackSerializer.serialize(object);
     }
   }
@@ -86,9 +85,8 @@ public enum KryoSerializer implements Serializer {
     int hashCode = Arrays.hashCode(bytes);
     if (!unnormalBytesHashCodeSet.contains(hashCode)) {
       /**
-       * In the following cases:
-       * 1. This bytes occurs for the first time.
-       * 2. This bytes have occurred and can be resolved by default kryo serializer 
+       * In the following cases: 1. This bytes occurs for the first time. 2. This bytes have occurred and can be
+       * resolved by default kryo serializer
        */
       try {
         input.setBuffer(bytes);
@@ -96,10 +94,10 @@ public enum KryoSerializer implements Serializer {
       } catch (Exception e) {
         // For unnormal bytes occurred for the first time, exception will be thrown
         unnormalBytesHashCodeSet.add(hashCode);
-        return fallbackSerializer.unserialize(bytes);//use fallback Serializer to resolve
+        return fallbackSerializer.unserialize(bytes);// use fallback Serializer to resolve
       }
     } else {
-      //For unnormal bytes
+      // For unnormal bytes
       return fallbackSerializer.unserialize(bytes);
     }
   }

@@ -19,10 +19,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class SimpleBeanCourseInfo implements Serializable {
-  /**
-   * 
-   */
+
   private static final long serialVersionUID = 1L;
+
   String name;
   int id;
 
