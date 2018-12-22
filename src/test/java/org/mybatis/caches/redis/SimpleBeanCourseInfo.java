@@ -16,7 +16,6 @@
 package org.mybatis.caches.redis;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class SimpleBeanCourseInfo implements Serializable {
 
@@ -53,11 +52,12 @@ public class SimpleBeanCourseInfo implements Serializable {
 
   @Override
   public boolean equals(Object obj) {
-    // TODO Auto-generated method stub
-    if (obj == null)
+    if (obj == null) {
       return false;
-    if (!obj.getClass().equals(SimpleBeanCourseInfo.class))
+    }
+    if (!obj.getClass().equals(SimpleBeanCourseInfo.class)) {
       return false;
+    }
     return this.toString().equals(obj.toString());
   }
 
