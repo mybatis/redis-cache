@@ -111,9 +111,9 @@
      | test dependencies
     -->
     <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
-      <version>4.12.2</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.3.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>

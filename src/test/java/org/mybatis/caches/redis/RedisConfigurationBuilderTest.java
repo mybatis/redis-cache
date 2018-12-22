@@ -15,10 +15,13 @@
  */
 package org.mybatis.caches.redis;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.mybatis.caches.redis.sslconfig.TestHostnameVerifier;
 import org.mybatis.caches.redis.sslconfig.TestSSLParameters;
 import org.mybatis.caches.redis.sslconfig.TestSSLSocketFactory;
@@ -49,7 +52,7 @@ public class RedisConfigurationBuilderTest {
     assertEquals(TestHostnameVerifier.class, redisConfig.getHostnameVerifier().getClass());
   }
 
-  @After
+  @AfterEach
   public void after() {
     System.setProperty(RedisConfigurationBuilder.SYSTEM_PROPERTY_REDIS_PROPERTIES_FILENAME,
         RedisConfigurationBuilder.REDIS_RESOURCE);
