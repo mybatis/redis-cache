@@ -15,17 +15,16 @@
  */
 package org.mybatis.caches.redis;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
- * Test with Ubuntu
- * sudo apt-get install redis-server
- * execute the test
+ * Test with Ubuntu sudo apt-get install redis-server execute the test
  */
 public final class RedisTestCase {
 
@@ -33,7 +32,7 @@ public final class RedisTestCase {
 
   private static RedisCache cache;
 
-  @BeforeClass
+  @BeforeAll
   public static void newCache() {
     cache = new RedisCache(DEFAULT_ID);
   }
@@ -66,9 +65,11 @@ public final class RedisTestCase {
     assertNull(cache.getObject(4));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void shouldNotCreateCache() {
-    cache = new RedisCache(null);
+    assertThrows(IllegalArgumentException.class, () -> {
+      cache = new RedisCache(null);
+    });
   }
 
   @Test
