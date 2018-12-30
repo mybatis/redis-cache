@@ -63,6 +63,7 @@
     <clirr.comparisonVersion>1.0.3</clirr.comparisonVersion>
     <findbugs.onlyAnalyze>org.mybatis.caches.redis.*</findbugs.onlyAnalyze>
     <gcu.product>Cache</gcu.product>
+    <module.name>org.mybatis.caches.redis</module.name>
   </properties>
 
   <dependencies>
