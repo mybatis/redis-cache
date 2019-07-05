@@ -20,6 +20,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -36,7 +38,7 @@ public final class RedisCache implements Cache {
 
   private static JedisPool pool;
 
-  private final RedisConfig redisConfig;
+  private RedisConfig redisConfig;
 
   private Integer timeout;
 
@@ -45,18 +47,16 @@ public final class RedisCache implements Cache {
       throw new IllegalArgumentException("Cache instances require an ID");
     }
     this.id = id;
-    redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
-    readWriteLock.writeLock().lock();
-    try {
-      if(pool == null || pool.isClosed()) {
+    synchronized (RedisCache.class) {
+      if (pool == null || pool.isClosed()) {
+        redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
         pool = new JedisPool(redisConfig, redisConfig.getHost(), redisConfig.getPort(), redisConfig.getConnectionTimeout(),
                 redisConfig.getSoTimeout(), redisConfig.getPassword(), redisConfig.getDatabase(), redisConfig.getClientName(),
                 redisConfig.isSsl(), redisConfig.getSslSocketFactory(), redisConfig.getSslParameters(),
                 redisConfig.getHostnameVerifier());
       }
-    }finally {
-        readWriteLock.writeLock().unlock();
     }
+
   }
 
   // TODO Review this is UNUSED
