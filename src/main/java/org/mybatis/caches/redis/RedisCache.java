@@ -46,10 +46,17 @@ public final class RedisCache implements Cache {
     }
     this.id = id;
     redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
-    pool = new JedisPool(redisConfig, redisConfig.getHost(), redisConfig.getPort(), redisConfig.getConnectionTimeout(),
-        redisConfig.getSoTimeout(), redisConfig.getPassword(), redisConfig.getDatabase(), redisConfig.getClientName(),
-        redisConfig.isSsl(), redisConfig.getSslSocketFactory(), redisConfig.getSslParameters(),
-        redisConfig.getHostnameVerifier());
+    readWriteLock.writeLock().lock();
+    try {
+      if(pool == null || pool.isClosed()) {
+        pool = new JedisPool(redisConfig, redisConfig.getHost(), redisConfig.getPort(), redisConfig.getConnectionTimeout(),
+                redisConfig.getSoTimeout(), redisConfig.getPassword(), redisConfig.getDatabase(), redisConfig.getClientName(),
+                redisConfig.isSsl(), redisConfig.getSslSocketFactory(), redisConfig.getSslParameters(),
+                redisConfig.getHostnameVerifier());
+      }
+    }finally {
+        readWriteLock.writeLock().unlock();
+    }
   }
 
   // TODO Review this is UNUSED
