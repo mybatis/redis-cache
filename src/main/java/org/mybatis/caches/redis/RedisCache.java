@@ -35,7 +35,7 @@ public final class RedisCache implements Cache {
 
   private static JedisPool pool;
 
-  private RedisConfig redisConfig;
+  private static RedisConfig redisConfig;
 
   private Integer timeout;
 
