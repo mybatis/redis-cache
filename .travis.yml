@@ -1,8 +1,8 @@
 language: java
 
 jdk:
-  - oraclejdk11
-  - oraclejdk8
+  - openjdk11
+  - openjdk8
 
 after_success:
   - chmod -R 777 ./travis/after_success.sh
