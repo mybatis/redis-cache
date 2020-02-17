@@ -1,5 +1,5 @@
 /**
- *    Copyright 2015-2018 the original author or authors.
+ *    Copyright 2015-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -32,23 +32,12 @@ public enum JDKSerializer implements Serializer {
   }
 
   public byte[] serialize(Object object) {
-    ObjectOutputStream oos = null;
-    ByteArrayOutputStream baos = null;
-    try {
-      baos = new ByteArrayOutputStream();
-      oos = new ObjectOutputStream(baos);
+    try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos)) {
       oos.writeObject(object);
       return baos.toByteArray();
     } catch (Exception e) {
       throw new CacheException(e);
-    } finally {
-      if (oos != null) {
-        try {
-          oos.close();
-        } catch (IOException e) {
-          // ignore IOException
-        }
-      }
     }
   }
 
@@ -56,22 +45,11 @@ public enum JDKSerializer implements Serializer {
     if (bytes == null) {
       return null;
     }
-    ByteArrayInputStream bais = null;
-    ObjectInputStream ois = null;
-    try {
-      bais = new ByteArrayInputStream(bytes);
-      ois = new ObjectInputStream(bais);
+    try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+        ObjectInputStream ois = new ObjectInputStream(bais)) {
       return ois.readObject();
     } catch (Exception e) {
       throw new CacheException(e);
-    } finally {
-      if (ois != null) {
-        try {
-          ois.close();
-        } catch (IOException e) {
-          // ignore IOException
-        }
-      }
     }
   }
 
