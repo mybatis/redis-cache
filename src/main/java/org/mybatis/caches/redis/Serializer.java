@@ -1,5 +1,5 @@
 /**
- *    Copyright 2015-2018 the original author or authors.
+ *    Copyright 2015-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package org.mybatis.caches.redis;
 
+import java.nio.ByteBuffer;
+
 public interface Serializer {
 
   /**
@@ -23,7 +25,12 @@ public interface Serializer {
    * @param object
    * @return serialized bytes
    */
-  public byte[] serialize(Object object);
+  byte[] serialize(long timestamp, Object object);
+
+  /**
+   * Read the timestamp
+   */
+  long getTimestamp(byte[] bytes);
 
   /**
    * Unserialize method
@@ -31,6 +38,18 @@ public interface Serializer {
    * @param bytes
    * @return unserialized object
    */
-  public Object unserialize(byte[] bytes);
+  Object unserialize(byte[] bytes);
 
+  default byte[] longToBytes(long x) {
+    ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+    buffer.putLong(x);
+    return buffer.array();
+  }
+
+  default long bytesToLong(byte[] bytes) {
+    ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+    buffer.put(bytes);
+    buffer.flip();//need flip
+    return buffer.getLong();
+  }
 }

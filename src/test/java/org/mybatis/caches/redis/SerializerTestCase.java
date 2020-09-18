@@ -57,10 +57,10 @@ public class SerializerTestCase {
     SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
 
     for (int i = 0; i != max; ++i) {
-      kryoSerializer.serialize(rawSimpleBean);
+      kryoSerializer.serialize(1, rawSimpleBean);
     }
 
-    byte[] serialBytes = kryoSerializer.serialize(rawSimpleBean);
+    byte[] serialBytes = kryoSerializer.serialize(1, rawSimpleBean);
     SimpleBeanStudentInfo unserializeSimpleBean = (SimpleBeanStudentInfo) kryoSerializer.unserialize(serialBytes);
 
     for (int i = 0; i != max; ++i) {
@@ -75,7 +75,7 @@ public class SerializerTestCase {
   public void testKryoFallbackSerialize() throws IOException {
 
     SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
-    byte[] serialBytes = jdkSerializer.serialize(rawSimpleBean);
+    byte[] serialBytes = jdkSerializer.serialize(1, rawSimpleBean);
 
     SimpleBeanStudentInfo unserializeSimpleBean = (SimpleBeanStudentInfo) kryoSerializer.unserialize(serialBytes);
     Assert.assertEquals(rawSimpleBean, unserializeSimpleBean);
@@ -86,7 +86,7 @@ public class SerializerTestCase {
   public void testKryoUnserializeWithoutRegistry() throws IOException {
     SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
 
-    byte[] serialBytes = kryoSerializer.serialize(rawSimpleBean);
+    byte[] serialBytes = kryoSerializer.serialize(1, rawSimpleBean);
 
     Kryo kryoWithoutRegisty = new Kryo();
     Input input = new Input(serialBytes);
@@ -130,10 +130,13 @@ public class SerializerTestCase {
     SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
 
     for (int i = 0; i != max; ++i) {
-      jdkSerializer.serialize(rawSimpleBean);
+      long ts = Long.MAX_VALUE - i;
+      byte[] bytes = jdkSerializer.serialize(ts, rawSimpleBean);
+      Assert.assertEquals(jdkSerializer.getTimestamp(bytes), ts);
+      Assert.assertEquals(rawSimpleBean, jdkSerializer.unserialize(bytes));
     }
 
-    byte[] serialBytes = jdkSerializer.serialize(rawSimpleBean);
+    byte[] serialBytes = jdkSerializer.serialize(1, rawSimpleBean);
     SimpleBeanStudentInfo unserializeSimpleBean = (SimpleBeanStudentInfo) jdkSerializer.unserialize(serialBytes);
 
     for (int i = 0; i != max; ++i) {

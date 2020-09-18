@@ -89,18 +89,24 @@ public final class RedisTestCase {
     // 2 secs : not expired yet
     Assert.assertEquals(0, cache.getObject(0));
     Thread.sleep(2000);
-    // 4 secs : should be expired
+    // 4 secs : (0) should be expired
     Assert.assertNull(cache.getObject(0));
+    Assert.assertNotNull(cache.getObject(1));
+    Thread.sleep(2000);
+    // 4 secs : (1) should be expired
     Assert.assertNull(cache.getObject(1));
-    // Make sure timeout is re-set
+
     cache.putObject(2, 2);
     Thread.sleep(2000);
     // 2 secs : not expired yet
     cache.putObject(3, 3);
     Assert.assertEquals(2, cache.getObject(2));
     Thread.sleep(2000);
-    // 4 secs : should be expired
+    // 4 secs : (2) should be expired
     Assert.assertNull(cache.getObject(2));
+    Assert.assertNotNull(cache.getObject(3));
+    Thread.sleep(2000);
+    // 4 secs : should be expired
     Assert.assertNull(cache.getObject(3));
   }
 }

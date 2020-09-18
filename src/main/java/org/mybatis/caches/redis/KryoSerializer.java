@@ -1,5 +1,5 @@
 /**
- *    Copyright 2015-2018 the original author or authors.
+ *    Copyright 2015-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ public enum KryoSerializer implements Serializer {
     fallbackSerializer = JDKSerializer.INSTANCE;// use JDKSerializer as fallback
   }
 
-  public byte[] serialize(Object object) {
+  public byte[] serialize(long timestamp, Object object) {
     output.clear();
     if (!unnormalClassSet.contains(object.getClass())) {
       /**
@@ -70,12 +70,17 @@ public enum KryoSerializer implements Serializer {
       } catch (Exception e) {
         // For unnormal class occurred for the first time, exception will be thrown
         unnormalClassSet.add(object.getClass());
-        return fallbackSerializer.serialize(object);// use fallback Serializer to resolve
+        return fallbackSerializer.serialize(timestamp, object);// use fallback Serializer to resolve
       }
     } else {
       // For unnormal class
-      return fallbackSerializer.serialize(object);
+      return fallbackSerializer.serialize(timestamp, object);
     }
+  }
+
+  @Override
+  public long getTimestamp(byte[] bytes) {
+    return 0;
   }
 
   public Object unserialize(byte[] bytes) {

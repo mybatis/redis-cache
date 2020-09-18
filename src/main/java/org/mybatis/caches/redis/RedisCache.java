@@ -68,15 +68,25 @@ public final class RedisCache implements Cache {
   @Override
   public void putObject(final Object key, final Object value) {
     final byte[] idBytes = id.getBytes();
-    client.hset(idBytes, key.toString().getBytes(), redisConfig.getSerializer().serialize(value));
-    if (timeout != null && client.ttl(idBytes) == -1) {
-      client.expire(idBytes, timeout);
+    long ts = 0;
+    if (timeout != null) {
+      ts = System.currentTimeMillis() + timeout * 1000;
     }
+    final byte[] objBytes = redisConfig.getSerializer().serialize(ts, value);
+    client.hset(idBytes, key.toString().getBytes(), objBytes);
   }
 
   @Override
   public Object getObject(final Object key) {
-    return redisConfig.getSerializer().unserialize(client.hget(id.getBytes(), key.toString().getBytes()));
+    byte[] objBytes = client.hget(id.getBytes(), key.toString().getBytes());
+    if (objBytes == null || objBytes.length < 8) return null;
+    long ts = redisConfig.getSerializer().getTimestamp(objBytes);
+    if (ts > 0 && ts < System.currentTimeMillis()) {
+      client.hdel(id, key.toString());
+      return null;
+    } else {
+      return redisConfig.getSerializer().unserialize(objBytes);
+    }
   }
 
   @Override
