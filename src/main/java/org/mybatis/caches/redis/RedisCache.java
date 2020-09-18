@@ -1,5 +1,5 @@
 /**
- *    Copyright 2015-2018 the original author or authors.
+ *    Copyright 2015-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
 
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
+import org.mybatis.caches.redis.client.GenericRedisClient;
+import org.mybatis.caches.redis.client.RedisClientBuilder;
 
 /**
  * Cache adapter for Redis.
@@ -34,7 +34,7 @@ public final class RedisCache implements Cache {
 
   private String id;
 
-  private static JedisPool pool;
+  private static GenericRedisClient client;
 
   private final RedisConfig redisConfig;
 
@@ -46,20 +46,12 @@ public final class RedisCache implements Cache {
     }
     this.id = id;
     redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
-    pool = new JedisPool(redisConfig, redisConfig.getHost(), redisConfig.getPort(), redisConfig.getConnectionTimeout(),
-        redisConfig.getSoTimeout(), redisConfig.getPassword(), redisConfig.getDatabase(), redisConfig.getClientName(),
-        redisConfig.isSsl(), redisConfig.getSslSocketFactory(), redisConfig.getSslParameters(),
-        redisConfig.getHostnameVerifier());
-  }
-
-  // TODO Review this is UNUSED
-  private Object execute(RedisCallback callback) {
-    Jedis jedis = pool.getResource();
-    try {
-      return callback.doWithRedis(jedis);
-    } finally {
-      jedis.close();
-    }
+    RedisClientBuilder builder = new RedisClientBuilder(redisConfig, redisConfig.getHosts(),
+        redisConfig.getConnectionTimeout(), redisConfig.getSoTimeout(), redisConfig.getMaxAttempts(),
+        redisConfig.getPassword(), redisConfig.getDatabase(), redisConfig.getClientName(), redisConfig.isSsl(),
+        redisConfig.getSslSocketFactory(), redisConfig.getSslParameters(), redisConfig.getHostnameVerifier(),
+        redisConfig.getHostAndPortMap());
+    client = builder.getClient();
   }
 
   @Override
@@ -69,60 +61,32 @@ public final class RedisCache implements Cache {
 
   @Override
   public int getSize() {
-    return (Integer) execute(new RedisCallback() {
-      @Override
-      public Object doWithRedis(Jedis jedis) {
-        Map<byte[], byte[]> result = jedis.hgetAll(id.getBytes());
-        return result.size();
-      }
-    });
+    Map<byte[], byte[]> result = client.hgetAll(id.getBytes());
+    return result.size();
   }
 
   @Override
   public void putObject(final Object key, final Object value) {
-    execute(new RedisCallback() {
-      @Override
-      public Object doWithRedis(Jedis jedis) {
-        final byte[] idBytes = id.getBytes();
-        jedis.hset(idBytes, key.toString().getBytes(), redisConfig.getSerializer().serialize(value));
-        if (timeout != null && jedis.ttl(idBytes) == -1) {
-          jedis.expire(idBytes, timeout);
-        }
-        return null;
-      }
-    });
+    final byte[] idBytes = id.getBytes();
+    client.hset(idBytes, key.toString().getBytes(), redisConfig.getSerializer().serialize(value));
+    if (timeout != null && client.ttl(idBytes) == -1) {
+      client.expire(idBytes, timeout);
+    }
   }
 
   @Override
   public Object getObject(final Object key) {
-    return execute(new RedisCallback() {
-      @Override
-      public Object doWithRedis(Jedis jedis) {
-        return redisConfig.getSerializer().unserialize(jedis.hget(id.getBytes(), key.toString().getBytes()));
-      }
-    });
+    return redisConfig.getSerializer().unserialize(client.hget(id.getBytes(), key.toString().getBytes()));
   }
 
   @Override
   public Object removeObject(final Object key) {
-    return execute(new RedisCallback() {
-      @Override
-      public Object doWithRedis(Jedis jedis) {
-        return jedis.hdel(id, key.toString());
-      }
-    });
+    return client.hdel(id, key.toString());
   }
 
   @Override
   public void clear() {
-    execute(new RedisCallback() {
-      @Override
-      public Object doWithRedis(Jedis jedis) {
-        jedis.del(id);
-        return null;
-      }
-    });
-
+    client.del(id);
   }
 
   @Override
