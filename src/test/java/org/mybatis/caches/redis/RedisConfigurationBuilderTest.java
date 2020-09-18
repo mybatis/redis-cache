@@ -1,5 +1,5 @@
 /**
- *    Copyright 2015-2018 the original author or authors.
+ *    Copyright 2015-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,13 +15,9 @@
  */
 package org.mybatis.caches.redis;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Test;
 import org.mybatis.caches.redis.sslconfig.TestHostnameVerifier;
 import org.mybatis.caches.redis.sslconfig.TestSSLParameters;
 import org.mybatis.caches.redis.sslconfig.TestSSLSocketFactory;
@@ -33,11 +29,11 @@ public class RedisConfigurationBuilderTest {
     System.setProperty(RedisConfigurationBuilder.SYSTEM_PROPERTY_REDIS_PROPERTIES_FILENAME, "no-such-file.properties");
     RedisConfig redisConfig = RedisConfigurationBuilder.getInstance()
         .parseConfiguration(this.getClass().getClassLoader());
-    assertEquals(JDKSerializer.class, redisConfig.getSerializer().getClass());
-    assertFalse(redisConfig.isSsl());
-    assertNull(redisConfig.getSslSocketFactory());
-    assertNull(redisConfig.getSslParameters());
-    assertNull(redisConfig.getHostnameVerifier());
+    Assert.assertEquals(JDKSerializer.class, redisConfig.getSerializer().getClass());
+    Assert.assertFalse(redisConfig.isSsl());
+    Assert.assertNull(redisConfig.getSslSocketFactory());
+    Assert.assertNull(redisConfig.getSslParameters());
+    Assert.assertNull(redisConfig.getHostnameVerifier());
   }
 
   @Test
@@ -45,14 +41,14 @@ public class RedisConfigurationBuilderTest {
     System.setProperty(RedisConfigurationBuilder.SYSTEM_PROPERTY_REDIS_PROPERTIES_FILENAME, "test1.properties");
     RedisConfig redisConfig = RedisConfigurationBuilder.getInstance()
         .parseConfiguration(this.getClass().getClassLoader());
-    assertEquals(KryoSerializer.class, redisConfig.getSerializer().getClass());
-    assertTrue(redisConfig.isSsl());
-    assertEquals(TestSSLSocketFactory.class, redisConfig.getSslSocketFactory().getClass());
-    assertEquals(TestSSLParameters.class, redisConfig.getSslParameters().getClass());
-    assertEquals(TestHostnameVerifier.class, redisConfig.getHostnameVerifier().getClass());
+    Assert.assertEquals(KryoSerializer.class, redisConfig.getSerializer().getClass());
+    Assert.assertTrue(redisConfig.isSsl());
+    Assert.assertEquals(TestSSLSocketFactory.class, redisConfig.getSslSocketFactory().getClass());
+    Assert.assertEquals(TestSSLParameters.class, redisConfig.getSslParameters().getClass());
+    Assert.assertEquals(TestHostnameVerifier.class, redisConfig.getHostnameVerifier().getClass());
   }
 
-  @AfterEach
+  @After
   public void after() {
     System.setProperty(RedisConfigurationBuilder.SYSTEM_PROPERTY_REDIS_PROPERTIES_FILENAME,
         RedisConfigurationBuilder.REDIS_RESOURCE);

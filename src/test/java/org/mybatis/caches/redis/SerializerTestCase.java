@@ -1,5 +1,5 @@
 /**
- *    Copyright 2015-2018 the original author or authors.
+ *    Copyright 2015-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,18 +15,18 @@
  */
 package org.mybatis.caches.redis;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class SerializerTestCase {
 
@@ -35,7 +35,7 @@ public class SerializerTestCase {
   Serializer kryoSerializer;
   Serializer jdkSerializer;
 
-  @BeforeEach
+  @Before
   public void setup() {
     kryoSerializer = KryoSerializer.INSTANCE;
     jdkSerializer = JDKSerializer.INSTANCE;
@@ -44,13 +44,13 @@ public class SerializerTestCase {
   @Test
   public void testKryoUnserializeNull() {
     Object obj = kryoSerializer.unserialize(null);
-    assertNull(obj);
+    Assert.assertNull(obj);
   }
 
   @Test
   public void testJDKUnserializeNull() {
     Object obj = jdkSerializer.unserialize(null);
-    assertNull(obj);
+    Assert.assertNull(obj);
   }
 
   public void testKryoSerialize() {
@@ -67,7 +67,7 @@ public class SerializerTestCase {
       kryoSerializer.unserialize(serialBytes);
     }
 
-    assertEquals(rawSimpleBean, unserializeSimpleBean);
+    Assert.assertEquals(rawSimpleBean, unserializeSimpleBean);
 
   }
 
@@ -78,7 +78,7 @@ public class SerializerTestCase {
     byte[] serialBytes = jdkSerializer.serialize(rawSimpleBean);
 
     SimpleBeanStudentInfo unserializeSimpleBean = (SimpleBeanStudentInfo) kryoSerializer.unserialize(serialBytes);
-    assertEquals(rawSimpleBean, unserializeSimpleBean);
+    Assert.assertEquals(rawSimpleBean, unserializeSimpleBean);
 
   }
 
@@ -91,7 +91,7 @@ public class SerializerTestCase {
     Kryo kryoWithoutRegisty = new Kryo();
     Input input = new Input(serialBytes);
     SimpleBeanStudentInfo unserializeSimpleBean = (SimpleBeanStudentInfo) kryoWithoutRegisty.readClassAndObject(input);
-    assertEquals(rawSimpleBean, unserializeSimpleBean);
+    Assert.assertEquals(rawSimpleBean, unserializeSimpleBean);
 
   }
 
@@ -121,7 +121,7 @@ public class SerializerTestCase {
     buffer.flush();
 
     SimpleBeanCourseInfo unserializeSimpleBean = (SimpleBeanCourseInfo) kryoSerializer.unserialize(data);
-    assertEquals(rawSimpleBean, unserializeSimpleBean);
+    Assert.assertEquals(rawSimpleBean, unserializeSimpleBean);
 
   }
 
@@ -140,13 +140,13 @@ public class SerializerTestCase {
       jdkSerializer.unserialize(serialBytes);
     }
 
-    assertEquals(rawSimpleBean, unserializeSimpleBean);
+    Assert.assertEquals(rawSimpleBean, unserializeSimpleBean);
 
   }
 
   @Test
   public void testSerializeCofig() {
     RedisConfig redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
-    assertEquals(JDKSerializer.class, redisConfig.getSerializer().getClass());
+    Assert.assertEquals(JDKSerializer.class, redisConfig.getSerializer().getClass());
   }
 }

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2015-2018 the original author or authors.
+ *    Copyright 2015-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,13 +15,10 @@
  */
 package org.mybatis.caches.redis;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test with Ubuntu sudo apt-get install redis-server execute the test
@@ -32,25 +29,27 @@ public final class RedisTestCase {
 
   private static RedisCache cache;
 
-  @BeforeAll
-  public static void newCache() {
+  @Before
+  public void newCache() {
     cache = new RedisCache(DEFAULT_ID);
+    cache.setTimeout(300);
   }
 
   @Test
   public void shouldDemonstrateCopiesAreEqual() {
     for (int i = 0; i < 1000; i++) {
       cache.putObject(i, i);
-      assertEquals(i, cache.getObject(i));
+
+      Assert.assertEquals(i, cache.getObject(i));
     }
   }
 
   @Test
   public void shouldRemoveItemOnDemand() {
     cache.putObject(0, 0);
-    assertNotNull(cache.getObject(0));
+    Assert.assertNotNull(cache.getObject(0));
     cache.removeObject(0);
-    assertNull(cache.getObject(0));
+    Assert.assertNull(cache.getObject(0));
   }
 
   @Test
@@ -58,28 +57,26 @@ public final class RedisTestCase {
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);
     }
-    assertNotNull(cache.getObject(0));
-    assertNotNull(cache.getObject(4));
+    Assert.assertNotNull(cache.getObject(0));
+    Assert.assertNotNull(cache.getObject(4));
     cache.clear();
-    assertNull(cache.getObject(0));
-    assertNull(cache.getObject(4));
+    Assert.assertNull(cache.getObject(0));
+    Assert.assertNull(cache.getObject(4));
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void shouldNotCreateCache() {
-    assertThrows(IllegalArgumentException.class, () -> {
-      cache = new RedisCache(null);
-    });
+    cache = new RedisCache(null);
   }
 
   @Test
   public void shouldVerifyCacheId() {
-    assertEquals("REDIS", cache.getId());
+    Assert.assertEquals("REDIS", cache.getId());
   }
 
   @Test
   public void shouldVerifyToString() {
-    assertEquals("Redis {REDIS}", cache.toString());
+    Assert.assertEquals("Redis {REDIS}", cache.toString());
   }
 
   @Test
@@ -90,20 +87,20 @@ public final class RedisTestCase {
     Thread.sleep(2000);
     cache.putObject(1, 1);
     // 2 secs : not expired yet
-    assertEquals(0, cache.getObject(0));
+    Assert.assertEquals(0, cache.getObject(0));
     Thread.sleep(2000);
     // 4 secs : should be expired
-    assertNull(cache.getObject(0));
-    assertNull(cache.getObject(1));
+    Assert.assertNull(cache.getObject(0));
+    Assert.assertNull(cache.getObject(1));
     // Make sure timeout is re-set
     cache.putObject(2, 2);
     Thread.sleep(2000);
     // 2 secs : not expired yet
     cache.putObject(3, 3);
-    assertEquals(2, cache.getObject(2));
+    Assert.assertEquals(2, cache.getObject(2));
     Thread.sleep(2000);
     // 4 secs : should be expired
-    assertNull(cache.getObject(2));
-    assertNull(cache.getObject(3));
+    Assert.assertNull(cache.getObject(2));
+    Assert.assertNull(cache.getObject(3));
   }
 }
