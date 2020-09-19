@@ -1,5 +1,5 @@
 /**
- *    Copyright 2015-2018 the original author or authors.
+ *    Copyright 2015-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,15 +19,16 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocketFactory;
 
+import redis.clients.jedis.JedisClusterHostAndPortMap;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Protocol;
 
 public class RedisConfig extends JedisPoolConfig {
 
-  private String host = Protocol.DEFAULT_HOST;
-  private int port = Protocol.DEFAULT_PORT;
+  private String hosts = Protocol.DEFAULT_HOST + ':' + Protocol.DEFAULT_PORT;
   private int connectionTimeout = Protocol.DEFAULT_TIMEOUT;
   private int soTimeout = Protocol.DEFAULT_TIMEOUT;
+  private int maxAttempts = 5;
   private String password;
   private int database = Protocol.DEFAULT_DATABASE;
   private String clientName;
@@ -35,6 +36,7 @@ public class RedisConfig extends JedisPoolConfig {
   private SSLSocketFactory sslSocketFactory;
   private SSLParameters sslParameters;
   private HostnameVerifier hostnameVerifier;
+  private JedisClusterHostAndPortMap hostAndPortMap;
   private Serializer serializer = JDKSerializer.INSTANCE;
 
   public boolean isSsl() {
@@ -69,23 +71,20 @@ public class RedisConfig extends JedisPoolConfig {
     this.hostnameVerifier = hostnameVerifier;
   }
 
-  public String getHost() {
-    return host;
+  public JedisClusterHostAndPortMap getHostAndPortMap() {
+    return hostAndPortMap;
   }
 
-  public void setHost(String host) {
-    if (host == null || "".equals(host)) {
-      host = Protocol.DEFAULT_HOST;
-    }
-    this.host = host;
+  public void setHostAndPortMap(JedisClusterHostAndPortMap hostAndPortMap) {
+    this.hostAndPortMap = hostAndPortMap;
   }
 
-  public int getPort() {
-    return port;
+  public String getHosts() {
+    return hosts;
   }
 
-  public void setPort(int port) {
-    this.port = port;
+  public void setHosts(String hosts) {
+    this.hosts = hosts;
   }
 
   public String getPassword() {
@@ -132,6 +131,14 @@ public class RedisConfig extends JedisPoolConfig {
 
   public void setSoTimeout(int soTimeout) {
     this.soTimeout = soTimeout;
+  }
+
+  public int getMaxAttempts() {
+    return maxAttempts;
+  }
+
+  public void setMaxAttempts(int maxAttempts) {
+    this.maxAttempts = maxAttempts;
   }
 
   public Serializer getSerializer() {

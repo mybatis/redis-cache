@@ -17,9 +17,9 @@ package org.mybatis.caches.redis;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
 
 import org.apache.ibatis.cache.CacheException;
 
@@ -31,10 +31,12 @@ public enum JDKSerializer implements Serializer {
     // prevent instantiation
   }
 
-  public byte[] serialize(Object object) {
-    try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+  public byte[] serialize(long timestamp, Object object) {
+    try (
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos)) {
       oos.writeObject(object);
+      baos.write(longToBytes(timestamp));
       return baos.toByteArray();
     } catch (Exception e) {
       throw new CacheException(e);
@@ -42,10 +44,11 @@ public enum JDKSerializer implements Serializer {
   }
 
   public Object unserialize(byte[] bytes) {
-    if (bytes == null) {
+    if (bytes == null || bytes.length < 8) {
       return null;
     }
-    try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+    try (
+        ByteArrayInputStream bais = new ByteArrayInputStream(Arrays.copyOf(bytes, bytes.length - 8));
         ObjectInputStream ois = new ObjectInputStream(bais)) {
       return ois.readObject();
     } catch (Exception e) {
