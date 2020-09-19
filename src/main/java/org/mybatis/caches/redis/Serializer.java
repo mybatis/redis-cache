@@ -30,7 +30,14 @@ public interface Serializer {
   /**
    * Read the timestamp
    */
-  long getTimestamp(byte[] bytes);
+  default long getTimestamp(byte[] bytes) {
+    if (bytes == null || bytes.length < 8) {
+      return -1;
+    }
+    byte[] copy = new byte[8];
+    System.arraycopy(bytes, bytes.length - 8, copy, 0, 8);
+    return bytesToLong(copy);
+  }
 
   /**
    * Unserialize method

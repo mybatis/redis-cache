@@ -20,6 +20,7 @@ package org.mybatis.caches.redis;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 
 import com.esotericsoftware.kryo.Kryo;
@@ -85,11 +86,11 @@ public class SerializerTestCase {
   @Test
   public void testKryoUnserializeWithoutRegistry() throws IOException {
     SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
-
     byte[] serialBytes = kryoSerializer.serialize(1, rawSimpleBean);
 
     Kryo kryoWithoutRegisty = new Kryo();
-    Input input = new Input(serialBytes);
+    byte[] stripped = Arrays.copyOf(serialBytes, serialBytes.length - 8);
+    Input input = new Input(stripped);
     SimpleBeanStudentInfo unserializeSimpleBean = (SimpleBeanStudentInfo) kryoWithoutRegisty.readClassAndObject(input);
     Assert.assertEquals(rawSimpleBean, unserializeSimpleBean);
 
@@ -118,6 +119,7 @@ public class SerializerTestCase {
     while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
       buffer.write(data, 0, nRead);
     }
+    buffer.write(kryoSerializer.longToBytes(System.currentTimeMillis()));
     buffer.flush();
 
     SimpleBeanCourseInfo unserializeSimpleBean = (SimpleBeanCourseInfo) kryoSerializer.unserialize(data);

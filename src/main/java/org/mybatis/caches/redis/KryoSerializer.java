@@ -66,6 +66,8 @@ public enum KryoSerializer implements Serializer {
        */
       try {
         kryo.writeClassAndObject(output, object);
+        // Add 8 bytes of timestamp to the tail
+        output.write(longToBytes(timestamp));
         return output.toBytes();
       } catch (Exception e) {
         // For unnormal class occurred for the first time, exception will be thrown
@@ -78,23 +80,19 @@ public enum KryoSerializer implements Serializer {
     }
   }
 
-  @Override
-  public long getTimestamp(byte[] bytes) {
-    return 0;
-  }
-
   public Object unserialize(byte[] bytes) {
-    if (bytes == null) {
+    if (bytes == null || bytes.length < 8) {
       return null;
     }
-    int hashCode = Arrays.hashCode(bytes);
-    if (!unnormalBytesHashCodeSet.contains(hashCode)) {
+    byte[] stripped = Arrays.copyOf(bytes, bytes.length - 8);
+    int hashCode = Arrays.hashCode(stripped);
+    if (!unnormalBytesHashCodeSet.contains(stripped)) {
       /**
        * In the following cases: 1. This bytes occurs for the first time. 2. This bytes have occurred and can be
        * resolved by default kryo serializer
        */
       try {
-        input.setBuffer(bytes);
+        input.setBuffer(stripped);
         return kryo.readClassAndObject(input);
       } catch (Exception e) {
         // For unnormal bytes occurred for the first time, exception will be thrown

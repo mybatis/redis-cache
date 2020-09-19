@@ -33,8 +33,8 @@ public enum JDKSerializer implements Serializer {
 
   public byte[] serialize(long timestamp, Object object) {
     try (
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos)) {
       oos.writeObject(object);
       baos.write(longToBytes(timestamp));
       return baos.toByteArray();
@@ -43,20 +43,12 @@ public enum JDKSerializer implements Serializer {
     }
   }
 
-  public long getTimestamp(byte[] bytes) {
-    if (bytes == null || bytes.length < 8) {
-      return -1;
-    }
-    byte[] copy = new byte[8];
-    System.arraycopy(bytes, bytes.length - 8, copy, 0, 8);
-    return bytesToLong(copy);
-  }
-
   public Object unserialize(byte[] bytes) {
     if (bytes == null || bytes.length < 8) {
       return null;
     }
-    try (ByteArrayInputStream bais = new ByteArrayInputStream(Arrays.copyOf(bytes, bytes.length - 8));
+    try (
+        ByteArrayInputStream bais = new ByteArrayInputStream(Arrays.copyOf(bytes, bytes.length - 8));
         ObjectInputStream ois = new ObjectInputStream(bais)) {
       return ois.readObject();
     } catch (Exception e) {
