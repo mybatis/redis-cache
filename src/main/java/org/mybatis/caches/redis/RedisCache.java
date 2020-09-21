@@ -36,7 +36,7 @@ public final class RedisCache implements Cache {
 
   private static GenericRedisClient client;
 
-  private final RedisConfig redisConfig;
+  private static RedisConfig redisConfig;
 
   private Integer timeout;
 
@@ -45,13 +45,17 @@ public final class RedisCache implements Cache {
       throw new IllegalArgumentException("Cache instances require an ID");
     }
     this.id = id;
-    redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
-    RedisClientBuilder builder = new RedisClientBuilder(redisConfig, redisConfig.getHosts(),
-        redisConfig.getConnectionTimeout(), redisConfig.getSoTimeout(), redisConfig.getMaxAttempts(),
-        redisConfig.getPassword(), redisConfig.getDatabase(), redisConfig.getClientName(), redisConfig.isSsl(),
-        redisConfig.getSslSocketFactory(), redisConfig.getSslParameters(), redisConfig.getHostnameVerifier(),
-        redisConfig.getHostAndPortMap());
-    client = builder.getClient();
+    synchronized (RedisCache.class) {
+      if (client == null) {
+        redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
+        RedisClientBuilder builder = new RedisClientBuilder(redisConfig, redisConfig.getHosts(),
+                redisConfig.getConnectionTimeout(), redisConfig.getSoTimeout(), redisConfig.getMaxAttempts(),
+                redisConfig.getPassword(), redisConfig.getDatabase(), redisConfig.getClientName(), redisConfig.isSsl(),
+                redisConfig.getSslSocketFactory(), redisConfig.getSslParameters(), redisConfig.getHostnameVerifier(),
+                redisConfig.getHostAndPortMap());
+        client = builder.getClient();
+      }
+    }
   }
 
   @Override
