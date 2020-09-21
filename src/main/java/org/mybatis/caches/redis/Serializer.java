@@ -19,7 +19,7 @@ public interface Serializer {
 
   /**
    * Serialize method
-   * 
+   *
    * @param object
    * @return serialized bytes
    */
@@ -27,7 +27,7 @@ public interface Serializer {
 
   /**
    * Unserialize method
-   * 
+   *
    * @param bytes
    * @return unserialized object
    */

@@ -15,12 +15,12 @@
  */
 package org.mybatis.caches.redis;
 
-import java.util.Arrays;
-import java.util.HashSet;
-
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+
+import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * SerializeUtil with Kryo, which is faster and more space consuming.
