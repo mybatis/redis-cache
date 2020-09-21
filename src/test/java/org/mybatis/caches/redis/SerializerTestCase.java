@@ -18,15 +18,15 @@ package org.mybatis.caches.redis;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
 
 public class SerializerTestCase {
 
@@ -98,7 +98,7 @@ public class SerializerTestCase {
   /**
    * SimpleBeanSerializedFile contains serialized bytes of an default object of simpleBeanCourceInfo. KryoSerializer can
    * unserialize from bytes of file derectly
-   * 
+   *
    * @throws IOException
    */
   @Test
