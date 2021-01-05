@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apache.ibatis.cache.Cache;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -36,7 +35,7 @@ public final class RedisCache implements Cache {
 
   private static JedisPool pool;
 
-  private final RedisConfig redisConfig;
+  private static RedisConfig redisConfig;
 
   private Integer timeout;
 
@@ -45,11 +44,16 @@ public final class RedisCache implements Cache {
       throw new IllegalArgumentException("Cache instances require an ID");
     }
     this.id = id;
-    redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
-    pool = new JedisPool(redisConfig, redisConfig.getHost(), redisConfig.getPort(), redisConfig.getConnectionTimeout(),
-        redisConfig.getSoTimeout(), redisConfig.getPassword(), redisConfig.getDatabase(), redisConfig.getClientName(),
-        redisConfig.isSsl(), redisConfig.getSslSocketFactory(), redisConfig.getSslParameters(),
-        redisConfig.getHostnameVerifier());
+    synchronized (RedisCache.class) {
+      if (pool == null || pool.isClosed()) {
+        redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
+        pool = new JedisPool(redisConfig, redisConfig.getHost(), redisConfig.getPort(), redisConfig.getConnectionTimeout(),
+                redisConfig.getSoTimeout(), redisConfig.getPassword(), redisConfig.getDatabase(), redisConfig.getClientName(),
+                redisConfig.isSsl(), redisConfig.getSslSocketFactory(), redisConfig.getSslParameters(),
+                redisConfig.getHostnameVerifier());
+      }
+    }
+
   }
 
   // TODO Review this is UNUSED
