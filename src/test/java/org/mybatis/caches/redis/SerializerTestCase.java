@@ -88,7 +88,7 @@ public class SerializerTestCase {
     for (int i = 0; i < 10000; i++) {
       new Thread(() -> {
         SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
-        byte[] serialBytes = jdkSerializer.serialize(rawSimpleBean);
+        byte[] serialBytes = kryoSerializer.serialize(rawSimpleBean);
 
         SimpleBeanStudentInfo unserializeSimpleBean = (SimpleBeanStudentInfo) kryoSerializer.unserialize(serialBytes);
         assertEquals(rawSimpleBean, unserializeSimpleBean);
