@@ -34,10 +34,7 @@ public enum KryoSerializer implements Serializer {
   /**
    * kryo is thread-unsafe, use ThreadLocal.
    */
-  private ThreadLocal<Kryo> kryos = ThreadLocal.withInitial(() -> {
-    Kryo kryo = new Kryo();
-    return kryo;
-  });
+  private ThreadLocal<Kryo> kryos = ThreadLocal.withInitial(() -> new Kryo());
 
   /**
    * Classes which can not resolved by default kryo serializer, which occurs very
