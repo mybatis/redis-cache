@@ -22,6 +22,6 @@ updates:
     interval: daily
   open-pull-requests-limit: 10
   ignore:
-  - dependency-name: jakarta.transaction:jakarta.tranaction-api
+  - dependency-name: jakarta.transaction:jakarta.transaction-api
     versions:
     - ">= 2.0.0"
