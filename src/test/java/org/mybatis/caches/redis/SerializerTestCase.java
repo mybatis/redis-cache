@@ -82,6 +82,20 @@ public class SerializerTestCase {
 
   }
 
+  // test kryo thread safe
+  @Test
+  public void testKryoSerializeMultiThread() throws IOException {
+    for (int i = 0; i < 10000; i++) {
+      new Thread(() -> {
+        SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
+        byte[] serialBytes = kryoSerializer.serialize(rawSimpleBean);
+
+        SimpleBeanStudentInfo unserializeSimpleBean = (SimpleBeanStudentInfo) kryoSerializer.unserialize(serialBytes);
+        assertEquals(rawSimpleBean, unserializeSimpleBean);
+      }).start();
+    }
+  }
+
   @Test
   public void testKryoUnserializeWithoutRegistry() throws IOException {
     SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
