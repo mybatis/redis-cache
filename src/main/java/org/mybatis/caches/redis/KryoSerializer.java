@@ -78,10 +78,10 @@ public enum KryoSerializer implements Serializer {
   }
 
   public Object unserialize(byte[] bytes) {
-    Input input = new Input();
     if (bytes == null) {
       return null;
     }
+    Input input = new Input();
     int hashCode = Arrays.hashCode(bytes);
     if (!unnormalBytesHashCodeSet.contains(hashCode)) {
       /**
