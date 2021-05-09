@@ -57,13 +57,13 @@ public enum KryoSerializer implements Serializer {
   }
 
   public byte[] serialize(Object object) {
-    Output output = new Output(200, -1);
     if (!unnormalClassSet.contains(object.getClass())) {
       /**
        * In the following cases: 1. This class occurs for the first time. 2. This class have occurred and can be
        * resolved by default kryo serializer
        */
       try {
+        Output output = new Output(200, -1);
         kryos.get().writeClassAndObject(output, object);
         return output.toBytes();
       } catch (Exception e) {
@@ -81,7 +81,6 @@ public enum KryoSerializer implements Serializer {
     if (bytes == null) {
       return null;
     }
-    Input input = new Input();
     int hashCode = Arrays.hashCode(bytes);
     if (!unnormalBytesHashCodeSet.contains(hashCode)) {
       /**
@@ -89,6 +88,7 @@ public enum KryoSerializer implements Serializer {
        * resolved by default kryo serializer
        */
       try {
+        Input input = new Input();
         input.setBuffer(bytes);
         return kryos.get().readClassAndObject(input);
       } catch (Exception e) {
