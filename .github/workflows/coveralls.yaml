@@ -28,7 +28,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 8
-          distribution: adopt
+          distribution: zulu
       - name: Start Redis
         uses: supercharge/redis-github-action@1.1.0
         with:
