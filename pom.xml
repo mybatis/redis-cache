@@ -48,8 +48,8 @@
     <url>https://github.com/mybatis/redis-cache/issues</url>
   </issueManagement>
   <ciManagement>
-    <system>Travis CI</system>
-    <url>https://travis-ci.org/mybatis/redis-cache</url>
+    <system>GitHub Actions</system>
+    <url>https://github.com/mybatis/redis-cache/actions</url>
   </ciManagement>
   <distributionManagement>
     <site>
