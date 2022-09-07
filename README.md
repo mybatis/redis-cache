@@ -7,11 +7,11 @@ MyBatis Redis Extension
 [![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/https/oss.sonatype.org/org.mybatis.caches/mybatis-redis.svg)](https://oss.sonatype.org/content/repositories/snapshots/org/mybatis/caches/mybatis-redis/)
 [![License](https://img.shields.io/:license-apache-brightgreen.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
-![mybatis-redis](http://mybatis.github.io/images/mybatis-logo.png)
+![mybatis-redis](https://mybatis.org/images/mybatis-logo.png)
 
 MyBatis-Redis extension Redis support for MyBatis Cache.
 
 Essentials
 ----------
 
-* [See the docs](http://mybatis.github.io/redis-cache/)
+* [See the docs](https://mybatis.org/redis-cache/)
