@@ -38,7 +38,7 @@ jobs:
           java-version: ${{ matrix.java }}
           distribution: ${{ matrix.distribution }}
       - name: Start Redis
-        uses: supercharge/redis-github-action@1.6.0
+        uses: supercharge/redis-github-action@6dc7a5eeaf9a8f860b6464e05195a15f8b9f3bbb # 1.7.0
         with:
           redis-version: 6
       - name: Test with Maven
