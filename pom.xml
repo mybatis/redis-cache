@@ -23,7 +23,7 @@
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
     <version>40</version>
-    <relativePath />
+    <relativePath/>
   </parent>
 
   <groupId>org.mybatis.caches</groupId>
@@ -37,10 +37,10 @@
   <inceptionYear>2015</inceptionYear>
 
   <scm>
-    <url>http://github.com/mybatis/redis-cache</url>
     <connection>scm:git:ssh://git@github.com/mybatis/redis-cache.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/mybatis/redis-cache.git</developerConnection>
     <tag>HEAD</tag>
+    <url>http://github.com/mybatis/redis-cache</url>
   </scm>
   <issueManagement>
     <system>GitHub Issue Management</system>
@@ -88,7 +88,7 @@
       <version>5.0.2</version>
       <scope>compile</scope>
     </dependency>
-    
+
     <!--
      | kryo dependencies
     -->
