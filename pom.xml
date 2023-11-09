@@ -29,7 +29,6 @@
   <groupId>org.mybatis.caches</groupId>
   <artifactId>mybatis-redis</artifactId>
   <version>1.0.0-beta3-SNAPSHOT</version>
-  <packaging>jar</packaging>
 
   <name>mybatis-redis</name>
   <description>Redis support for MyBatis Cache</description>
@@ -39,7 +38,7 @@
 
   <scm>
     <url>http://github.com/mybatis/redis-cache</url>
-    <connection>scm:git:ssh://github.com/mybatis/redis-cache.git</connection>
+    <connection>scm:git:ssh://git@github.com/mybatis/redis-cache.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/mybatis/redis-cache.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
@@ -53,9 +52,9 @@
   </ciManagement>
   <distributionManagement>
     <site>
-      <id>gh-pages</id>
+      <id>gh-pages-scm</id>
       <name>Mybatis GitHub Pages</name>
-      <url>git:ssh://git@github.com/mybatis/redis-cache.git?gh-pages#</url>
+      <url>scm:git:ssh://git@github.com/mybatis/redis-cache.git</url>
     </site>
   </distributionManagement>
 
