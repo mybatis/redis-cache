@@ -23,13 +23,12 @@
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
     <version>40</version>
-    <relativePath />
+    <relativePath/>
   </parent>
 
   <groupId>org.mybatis.caches</groupId>
   <artifactId>mybatis-redis</artifactId>
   <version>1.0.0-beta3-SNAPSHOT</version>
-  <packaging>jar</packaging>
 
   <name>mybatis-redis</name>
   <description>Redis support for MyBatis Cache</description>
@@ -38,10 +37,10 @@
   <inceptionYear>2015</inceptionYear>
 
   <scm>
-    <url>http://github.com/mybatis/redis-cache</url>
-    <connection>scm:git:ssh://github.com/mybatis/redis-cache.git</connection>
+    <connection>scm:git:ssh://git@github.com/mybatis/redis-cache.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/mybatis/redis-cache.git</developerConnection>
     <tag>HEAD</tag>
+    <url>http://github.com/mybatis/redis-cache</url>
   </scm>
   <issueManagement>
     <system>GitHub Issue Management</system>
@@ -53,9 +52,9 @@
   </ciManagement>
   <distributionManagement>
     <site>
-      <id>gh-pages</id>
+      <id>gh-pages-scm</id>
       <name>Mybatis GitHub Pages</name>
-      <url>git:ssh://git@github.com/mybatis/redis-cache.git?gh-pages#</url>
+      <url>scm:git:ssh://git@github.com/mybatis/redis-cache.git</url>
     </site>
   </distributionManagement>
 
@@ -89,7 +88,7 @@
       <version>5.0.2</version>
       <scope>compile</scope>
     </dependency>
-    
+
     <!--
      | kryo dependencies
     -->
