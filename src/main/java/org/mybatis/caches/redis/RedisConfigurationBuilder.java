@@ -149,7 +149,7 @@ final class RedisConfigurationBuilder {
     Object instance;
     try {
       Class<?> clazz = Resources.classForName(value);
-      instance = clazz.newInstance();
+      instance = clazz.getDeclaredConstructor().newInstance();
     } catch (Exception e) {
       throw new CacheException("Could not instantiate class: '" + value + "'.", e);
     }
