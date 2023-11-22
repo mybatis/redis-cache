@@ -53,6 +53,7 @@ public class SerializerTestCase {
     assertNull(obj);
   }
 
+  @Test
   public void testKryoSerialize() {
     SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
 
