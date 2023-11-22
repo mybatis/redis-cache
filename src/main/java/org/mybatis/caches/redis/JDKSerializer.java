@@ -30,6 +30,7 @@ public enum JDKSerializer implements Serializer {
     // prevent instantiation
   }
 
+  @Override
   public byte[] serialize(Object object) {
     try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos)) {
@@ -40,6 +41,7 @@ public enum JDKSerializer implements Serializer {
     }
   }
 
+  @Override
   public Object unserialize(byte[] bytes) {
     if (bytes == null) {
       return null;

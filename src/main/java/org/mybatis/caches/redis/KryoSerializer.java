@@ -57,6 +57,7 @@ public enum KryoSerializer implements Serializer {
     fallbackSerializer = JDKSerializer.INSTANCE;// use JDKSerializer as fallback
   }
 
+  @Override
   public byte[] serialize(Object object) {
     if (!unnormalClassSet.contains(object.getClass())) {
       /**
@@ -78,6 +79,7 @@ public enum KryoSerializer implements Serializer {
     }
   }
 
+  @Override
   public Object unserialize(byte[] bytes) {
     if (bytes == null) {
       return null;
