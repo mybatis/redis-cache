@@ -101,16 +101,6 @@
     </dependency>
 
     <!--
-     | trick to fix javadoc generation
-    -->
-    <dependency>
-      <groupId>jakarta.transaction</groupId>
-      <artifactId>jakarta.transaction-api</artifactId>
-      <version>2.0.1</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <!--
      | test dependencies
     -->
     <dependency>
