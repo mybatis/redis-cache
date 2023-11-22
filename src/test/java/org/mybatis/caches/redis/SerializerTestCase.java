@@ -28,7 +28,7 @@ import java.io.InputStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class SerializerTestCase {
+class SerializerTestCase {
 
   int max = 1000000;
 
@@ -36,25 +36,25 @@ public class SerializerTestCase {
   Serializer jdkSerializer;
 
   @BeforeEach
-  public void setup() {
+  void setup() {
     kryoSerializer = KryoSerializer.INSTANCE;
     jdkSerializer = JDKSerializer.INSTANCE;
   }
 
   @Test
-  public void testKryoUnserializeNull() {
+  void testKryoUnserializeNull() {
     Object obj = kryoSerializer.unserialize(null);
     assertNull(obj);
   }
 
   @Test
-  public void testJDKUnserializeNull() {
+  void testJDKUnserializeNull() {
     Object obj = jdkSerializer.unserialize(null);
     assertNull(obj);
   }
 
   @Test
-  public void testKryoSerialize() {
+  void testKryoSerialize() {
     SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
 
     for (int i = 0; i != max; ++i) {
@@ -73,7 +73,7 @@ public class SerializerTestCase {
   }
 
   @Test
-  public void testKryoFallbackSerialize() throws IOException {
+  void testKryoFallbackSerialize() throws IOException {
 
     SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
     byte[] serialBytes = jdkSerializer.serialize(rawSimpleBean);
@@ -85,7 +85,7 @@ public class SerializerTestCase {
 
   // test kryo thread safe
   @Test
-  public void testKryoSerializeMultiThread() throws IOException {
+  void testKryoSerializeMultiThread() throws IOException {
     for (int i = 0; i < 10000; i++) {
       new Thread(() -> {
         SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
@@ -98,7 +98,7 @@ public class SerializerTestCase {
   }
 
   @Test
-  public void testKryoUnserializeWithoutRegistry() throws IOException {
+  void testKryoUnserializeWithoutRegistry() throws IOException {
     SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
 
     byte[] serialBytes = kryoSerializer.serialize(rawSimpleBean);
@@ -117,7 +117,7 @@ public class SerializerTestCase {
    * @throws IOException
    */
   @Test
-  public void testKryoUnserializeWithoutRegistryWithFile() throws IOException {
+  void testKryoUnserializeWithoutRegistryWithFile() throws IOException {
     SimpleBeanCourseInfo rawSimpleBean = new SimpleBeanCourseInfo();
 
     InputStream inputStream = SerializerTestCase.class.getClass()
@@ -141,7 +141,7 @@ public class SerializerTestCase {
   }
 
   @Test
-  public void testJDKSerialize() {
+  void testJDKSerialize() {
     SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
 
     for (int i = 0; i != max; ++i) {
@@ -160,7 +160,7 @@ public class SerializerTestCase {
   }
 
   @Test
-  public void testSerializeCofig() {
+  void testSerializeCofig() {
     RedisConfig redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
     assertEquals(JDKSerializer.class, redisConfig.getSerializer().getClass());
   }

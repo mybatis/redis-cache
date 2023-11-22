@@ -1,5 +1,5 @@
 /*
- *    Copyright 2015-2022 the original author or authors.
+ *    Copyright 2015-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ import org.mybatis.caches.redis.sslconfig.TestHostnameVerifier;
 import org.mybatis.caches.redis.sslconfig.TestSSLParameters;
 import org.mybatis.caches.redis.sslconfig.TestSSLSocketFactory;
 
-public class RedisConfigurationBuilderTest {
+class RedisConfigurationBuilderTest {
 
   @Test
-  public void testDefaults() throws Exception {
+  void testDefaults() throws Exception {
     System.setProperty(RedisConfigurationBuilder.SYSTEM_PROPERTY_REDIS_PROPERTIES_FILENAME, "no-such-file.properties");
     RedisConfig redisConfig = RedisConfigurationBuilder.getInstance()
         .parseConfiguration(this.getClass().getClassLoader());
@@ -41,7 +41,7 @@ public class RedisConfigurationBuilderTest {
   }
 
   @Test
-  public void test1() throws Exception {
+  void test1() throws Exception {
     System.setProperty(RedisConfigurationBuilder.SYSTEM_PROPERTY_REDIS_PROPERTIES_FILENAME, "test1.properties");
     RedisConfig redisConfig = RedisConfigurationBuilder.getInstance()
         .parseConfiguration(this.getClass().getClassLoader());
