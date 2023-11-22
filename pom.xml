@@ -101,16 +101,6 @@
     </dependency>
 
     <!--
-     | trick to fix javadoc generation
-    -->
-    <dependency>
-      <groupId>jakarta.transaction</groupId>
-      <artifactId>jakarta.transaction-api</artifactId>
-      <version>2.0.1</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <!--
      | test dependencies
     -->
     <dependency>
@@ -127,6 +117,7 @@
     </dependency>
   </dependencies>
 
+  <!-- Profile exists if using projects-aggregator to build as it needs to skip this project on windows -->
   <profiles>
     <profile>
       <id>noTest</id>
