@@ -1,5 +1,5 @@
 /*
- *    Copyright 2015-2022 the original author or authors.
+ *    Copyright 2015-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ public enum JDKSerializer implements Serializer {
     // prevent instantiation
   }
 
+  @Override
   public byte[] serialize(Object object) {
     try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos)) {
@@ -40,6 +41,7 @@ public enum JDKSerializer implements Serializer {
     }
   }
 
+  @Override
   public Object unserialize(byte[] bytes) {
     if (bytes == null) {
       return null;

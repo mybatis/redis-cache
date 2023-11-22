@@ -1,5 +1,5 @@
 /*
- *    Copyright 2015-2022 the original author or authors.
+ *    Copyright 2015-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@ public enum KryoSerializer implements Serializer {
     fallbackSerializer = JDKSerializer.INSTANCE;// use JDKSerializer as fallback
   }
 
+  @Override
   public byte[] serialize(Object object) {
     if (!unnormalClassSet.contains(object.getClass())) {
       /**
@@ -78,6 +79,7 @@ public enum KryoSerializer implements Serializer {
     }
   }
 
+  @Override
   public Object unserialize(byte[] bytes) {
     if (bytes == null) {
       return null;
