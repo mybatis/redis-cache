@@ -1,5 +1,5 @@
 /*
- *    Copyright 2015-2022 the original author or authors.
+ *    Copyright 2015-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,19 +26,19 @@ import org.junit.jupiter.api.Test;
 /**
  * Test with Ubuntu sudo apt-get install redis-server execute the test
  */
-public final class RedisTestCase {
+final class RedisTestCase {
 
   private static final String DEFAULT_ID = "REDIS";
 
   private static RedisCache cache;
 
   @BeforeAll
-  public static void newCache() {
+  static void newCache() {
     cache = new RedisCache(DEFAULT_ID);
   }
 
   @Test
-  public void shouldDemonstrateCopiesAreEqual() {
+  void shouldDemonstrateCopiesAreEqual() {
     for (int i = 0; i < 1000; i++) {
       cache.putObject(i, i);
       assertEquals(i, cache.getObject(i));
@@ -46,7 +46,7 @@ public final class RedisTestCase {
   }
 
   @Test
-  public void shouldRemoveItemOnDemand() {
+  void shouldRemoveItemOnDemand() {
     cache.putObject(0, 0);
     assertNotNull(cache.getObject(0));
     cache.removeObject(0);
@@ -54,7 +54,7 @@ public final class RedisTestCase {
   }
 
   @Test
-  public void shouldFlushAllItemsOnDemand() {
+  void shouldFlushAllItemsOnDemand() {
     for (int i = 0; i < 5; i++) {
       cache.putObject(i, i);
     }
@@ -66,24 +66,24 @@ public final class RedisTestCase {
   }
 
   @Test
-  public void shouldNotCreateCache() {
+  void shouldNotCreateCache() {
     assertThrows(IllegalArgumentException.class, () -> {
       cache = new RedisCache(null);
     });
   }
 
   @Test
-  public void shouldVerifyCacheId() {
+  void shouldVerifyCacheId() {
     assertEquals("REDIS", cache.getId());
   }
 
   @Test
-  public void shouldVerifyToString() {
+  void shouldVerifyToString() {
     assertEquals("Redis {REDIS}", cache.toString());
   }
 
   @Test
-  public void shouldDeleteExpiredCache() throws Exception {
+  void shouldDeleteExpiredCache() throws Exception {
     // set timeout to 3 secs
     cache.setTimeout(3);
     cache.putObject(0, 0);

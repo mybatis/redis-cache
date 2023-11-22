@@ -1,5 +1,5 @@
 /*
- *    Copyright 2015-2022 the original author or authors.
+ *    Copyright 2015-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -69,60 +69,41 @@ public final class RedisCache implements Cache {
 
   @Override
   public int getSize() {
-    return (Integer) execute(new RedisCallback() {
-      @Override
-      public Object doWithRedis(Jedis jedis) {
-        Map<byte[], byte[]> result = jedis.hgetAll(id.getBytes());
-        return result.size();
-      }
+    return (Integer) execute(jedis -> {
+      Map<byte[], byte[]> result = jedis.hgetAll(id.getBytes());
+      return result.size();
     });
   }
 
   @Override
   public void putObject(final Object key, final Object value) {
-    execute(new RedisCallback() {
-      @Override
-      public Object doWithRedis(Jedis jedis) {
-        final byte[] idBytes = id.getBytes();
-        jedis.hset(idBytes, key.toString().getBytes(), redisConfig.getSerializer().serialize(value));
-        if (timeout != null && jedis.ttl(idBytes) == -1) {
-          jedis.expire(idBytes, timeout);
-        }
-        return null;
+    execute(jedis -> {
+      final byte[] idBytes = id.getBytes();
+      jedis.hset(idBytes, key.toString().getBytes(), redisConfig.getSerializer().serialize(value));
+      if (timeout != null && jedis.ttl(idBytes) == -1) {
+        jedis.expire(idBytes, timeout);
       }
+      return null;
     });
   }
 
   @Override
   public Object getObject(final Object key) {
-    return execute(new RedisCallback() {
-      @Override
-      public Object doWithRedis(Jedis jedis) {
-        return redisConfig.getSerializer().unserialize(jedis.hget(id.getBytes(), key.toString().getBytes()));
-      }
-    });
+    return execute(
+        jedis -> redisConfig.getSerializer().unserialize(jedis.hget(id.getBytes(), key.toString().getBytes())));
   }
 
   @Override
   public Object removeObject(final Object key) {
-    return execute(new RedisCallback() {
-      @Override
-      public Object doWithRedis(Jedis jedis) {
-        return jedis.hdel(id, key.toString());
-      }
-    });
+    return execute(jedis -> jedis.hdel(id, key.toString()));
   }
 
   @Override
   public void clear() {
-    execute(new RedisCallback() {
-      @Override
-      public Object doWithRedis(Jedis jedis) {
-        jedis.del(id);
-        return null;
-      }
+    execute(jedis -> {
+      jedis.del(id);
+      return null;
     });
-
   }
 
   @Override

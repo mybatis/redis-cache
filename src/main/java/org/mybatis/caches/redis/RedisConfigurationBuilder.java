@@ -1,5 +1,5 @@
 /*
- *    Copyright 2015-2022 the original author or authors.
+ *    Copyright 2015-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -78,20 +78,15 @@ final class RedisConfigurationBuilder {
     Properties config = new Properties();
 
     String redisPropertiesFilename = System.getProperty(SYSTEM_PROPERTY_REDIS_PROPERTIES_FILENAME, REDIS_RESOURCE);
-    InputStream input = classLoader.getResourceAsStream(redisPropertiesFilename);
-    if (input != null) {
-      try {
+
+    try (InputStream input = classLoader.getResourceAsStream(redisPropertiesFilename)) {
+      if (input != null) {
         config.load(input);
-      } catch (IOException e) {
-        throw new RuntimeException("An error occurred while reading classpath property '" + redisPropertiesFilename
-            + "', see nested exceptions", e);
-      } finally {
-        try {
-          input.close();
-        } catch (IOException e) {
-          // close quietly
-        }
       }
+    } catch (IOException e) {
+      throw new RuntimeException(
+          "An error occurred while reading classpath property '" + redisPropertiesFilename + "', see nested exceptions",
+          e);
     }
 
     RedisConfig jedisConfig = new RedisConfig();

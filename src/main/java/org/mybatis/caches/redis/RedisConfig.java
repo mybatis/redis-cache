@@ -1,5 +1,5 @@
 /*
- *    Copyright 2015-2022 the original author or authors.
+ *    Copyright 2015-2023 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ public class RedisConfig extends JedisPoolConfig {
   }
 
   public void setHost(String host) {
-    if (host == null || "".equals(host)) {
+    if (host == null || host.isEmpty()) {
       host = Protocol.DEFAULT_HOST;
     }
     this.host = host;
@@ -93,7 +93,7 @@ public class RedisConfig extends JedisPoolConfig {
   }
 
   public void setPassword(String password) {
-    if ("".equals(password)) {
+    if (password == null || password.isEmpty()) {
       password = null;
     }
     this.password = password;
@@ -112,7 +112,7 @@ public class RedisConfig extends JedisPoolConfig {
   }
 
   public void setClientName(String clientName) {
-    if ("".equals(clientName)) {
+    if (clientName == null || clientName.isEmpty()) {
       clientName = null;
     }
     this.clientName = clientName;
