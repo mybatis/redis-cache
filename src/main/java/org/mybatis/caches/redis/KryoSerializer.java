@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * SerializeUtil with Kryo, which is faster and more space consuming.
+ * SerializeUtil with Kryo, which is faster and less space consuming.
  *
  * @author Lei Jiang(ladd.cn@gmail.com)
  */
