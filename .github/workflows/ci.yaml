@@ -7,7 +7,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
         java: [11, 17, 21, 22-ea]
         distribution: ['temurin']
       fail-fast: false
@@ -22,8 +22,8 @@ jobs:
           java-version: ${{ matrix.java }}
           distribution: ${{ matrix.distribution }}
       - name: Start Redis
-        uses: supercharge/redis-github-action@1.7.0
+        uses: shogo82148/actions-setup-redis@v1.31.0
         with:
-          redis-version: 6
+          redis-version: latest
       - name: Test with Maven
         run: ./mvnw test -B -V --no-transfer-progress -D"license.skip=true"
