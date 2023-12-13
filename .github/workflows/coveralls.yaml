@@ -14,7 +14,7 @@ jobs:
           java-version: 21
           distribution: zulu
       - name: Start Redis
-        uses: supercharge/redis-github-action@1.7.0
+        uses: supercharge/redis-github-action@1.8.0
         with:
           redis-version: 6
       - name: Report Coverage to Coveralls for Pull Requests
