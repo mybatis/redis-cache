@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<pmd version="4.3" timestamp="2015-05-16T11:27:49.810">
-<file name="/home/eduardo/git/redis-cache/target/checkout/src/main/java/org/mybatis/caches/redis/RedisConfigurationBuilder.java">
-<violation beginline="93" endline="95" begincolumn="35" endcolumn="33" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.mybatis.caches.redis" class="RedisConfigurationBuilder" method="parseConfiguration" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
-Avoid empty catch blocks
-</violation>
-</file>
-</pmd>
