@@ -32,7 +32,7 @@
 
   <name>mybatis-redis</name>
   <description>Redis support for MyBatis Cache</description>
-  <url>https://github.com/mybatis/redis-cache</url>
+  <url>https://github.com/mybatis/redis-cache/</url>
 
   <inceptionYear>2015</inceptionYear>
 
@@ -40,7 +40,7 @@
     <connection>scm:git:ssh://git@github.com/mybatis/redis-cache.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/mybatis/redis-cache.git</developerConnection>
     <tag>HEAD</tag>
-    <url>http://github.com/mybatis/redis-cache</url>
+    <url>http://github.com/mybatis/redis-cache/</url>
   </scm>
   <issueManagement>
     <system>GitHub Issue Management</system>
@@ -69,9 +69,7 @@
   </properties>
 
   <dependencies>
-    <!--
-     | Provided dependencies
-    -->
+    <!-- Provided dependencies -->
     <dependency>
       <groupId>org.mybatis</groupId>
       <artifactId>mybatis</artifactId>
@@ -79,9 +77,7 @@
       <scope>provided</scope>
     </dependency>
 
-    <!--
-     | compile dependencies
-    -->
+    <!-- compile dependencies -->
     <dependency>
       <groupId>redis.clients</groupId>
       <artifactId>jedis</artifactId>
@@ -89,9 +85,7 @@
       <scope>compile</scope>
     </dependency>
 
-    <!--
-     | kryo dependencies
-    -->
+    <!-- kryo dependencies -->
     <dependency>
       <groupId>com.esotericsoftware.kryo</groupId>
       <artifactId>kryo5</artifactId>
@@ -100,9 +94,7 @@
       <optional>true</optional>
     </dependency>
 
-    <!--
-     | test dependencies
-    -->
+    <!-- test dependencies -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
