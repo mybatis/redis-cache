@@ -11,8 +11,9 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
+          cache: maven
+          distribution: temurin
           java-version: 21
-          distribution: zulu
       - name: Start Redis
         uses: supercharge/redis-github-action@1.8.0
         with:
