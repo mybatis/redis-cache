@@ -20,12 +20,12 @@ jobs:
       - name: Set up JDK ${{ matrix.java }} ${{ matrix.distribution }}
         uses: actions/setup-java@v4
         with:
+          cache: ${{ matrix.cache }}
           java-version: ${{ matrix.java }}
           distribution: ${{ matrix.distribution }}
       - name: Start Redis
         uses: shogo82148/actions-setup-redis@v1.34.0
         with:
           redis-version: latest
-          cache: ${{ matrix.cache }}
       - name: Test with Maven
         run: ./mvnw test -B -V --no-transfer-progress -D"license.skip=true"
