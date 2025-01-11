@@ -11,16 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up JDK
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           cache: maven
           distribution: temurin
           java-version: 21
       - name: Start Redis
-        uses: supercharge/redis-github-action@1.8.0
+        uses: shogo82148/actions-setup-redis@v1.37.0
         with:
-          redis-version: 6
+          redis-version: latest
       - name: Deploy to Sonatype
         run: ./mvnw deploy -DskipTests -B -V --no-transfer-progress --settings ./.mvn/settings.xml -Dlicense.skip=true
         env:
