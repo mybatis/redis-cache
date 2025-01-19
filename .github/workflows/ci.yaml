@@ -24,7 +24,7 @@ jobs:
           distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.java }}
       - name: Start Redis
-        uses: shogo82148/actions-setup-redis@v1.37.0
+        uses: shogo82148/actions-setup-redis@v1.38.0
         with:
           redis-version: latest
       - name: Test with Maven
