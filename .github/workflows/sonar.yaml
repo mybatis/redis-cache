@@ -23,7 +23,7 @@ jobs:
           distribution: temurin
           java-version: 21
       - name: Start Redis
-        uses: shogo82148/actions-setup-redis@v1.39.0
+        uses: shogo82148/actions-setup-redis@v1.41.0
         with:
           redis-version: latest
       - name: Analyze with SonarCloud
