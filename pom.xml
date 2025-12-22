@@ -29,7 +29,7 @@
 
   <groupId>org.mybatis.caches</groupId>
   <artifactId>mybatis-redis</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.1.0</version>
 
   <name>mybatis-redis</name>
   <description>Redis support for MyBatis Cache</description>
@@ -40,7 +40,7 @@
   <scm>
     <connection>scm:git:ssh://git@github.com/mybatis/redis-cache.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/mybatis/redis-cache.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>mybatis-redis-1.1.0</tag>
     <url>http://github.com/mybatis/redis-cache/</url>
   </scm>
   <issueManagement>
@@ -70,7 +70,7 @@
     <module.name>org.mybatis.caches.redis</module.name>
 
     <!-- Reproducible Builds -->
-    <project.build.outputTimestamp>1736569293</project.build.outputTimestamp>
+    <project.build.outputTimestamp>1766371980</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
