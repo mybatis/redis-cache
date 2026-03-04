@@ -1,5 +1,5 @@
 /*
- *    Copyright 2015-2023 the original author or authors.
+ *    Copyright 2015-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -147,5 +147,23 @@ class SerializerTestCase {
   void testSerializeCofig() {
     RedisConfig redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
     assertEquals(JDKSerializer.class, redisConfig.getSerializer().getClass());
+  }
+
+  @Test
+  void testKryoResetClearsThreadLocal() throws InterruptedException {
+    // Verify that reset() removes the Kryo instance from the current thread's ThreadLocalMap.
+    // After reset(), a subsequent serialize call should still work (new Kryo is created on demand).
+    SimpleBeanStudentInfo rawSimpleBean = new SimpleBeanStudentInfo();
+
+    // Prime the ThreadLocal for this thread
+    kryoSerializer.serialize(rawSimpleBean);
+
+    // Reset should not throw and should clear the thread-local Kryo instance
+    kryoSerializer.reset();
+
+    // Serialization must still work correctly after reset (new Kryo created lazily)
+    byte[] serialBytes = kryoSerializer.serialize(rawSimpleBean);
+    SimpleBeanStudentInfo result = (SimpleBeanStudentInfo) kryoSerializer.unserialize(serialBytes);
+    assertEquals(rawSimpleBean, result);
   }
 }

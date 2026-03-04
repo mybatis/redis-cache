@@ -1,5 +1,5 @@
 /*
- *    Copyright 2015-2023 the original author or authors.
+ *    Copyright 2015-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -101,6 +101,24 @@ public enum KryoSerializer implements Serializer {
       unnormalBytesHashCodeSet.add(hashCode);
       return fallbackSerializer.unserialize(bytes);// use fallback Serializer to resolve
     }
+  }
+
+  /**
+   * Removes the {@link Kryo} instance bound to the current thread, releasing the strong reference that would otherwise
+   * prevent the thread's context {@link ClassLoader} (e.g. Tomcat's {@code WebappClassLoader}) from being
+   * garbage-collected after an application redeployment.
+   * <p>
+   * In web-container environments the container reuses worker threads across redeployments. Without this call the
+   * reference chain <em>Container Thread → ThreadLocalMap → Kryo → Kryo.class → WebappClassLoader</em> keeps the loader
+   * (and all classes it loaded) alive in Metaspace until the JVM is restarted, eventually causing
+   * {@code OutOfMemoryError: Metaspace}.
+   * <p>
+   * Callers should invoke this method for every thread that has used the serializer, typically from a
+   * {@code ServletContextListener.contextDestroyed} callback.
+   */
+  @Override
+  public void reset() {
+    kryos.remove();
   }
 
 }
