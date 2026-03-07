@@ -1,5 +1,5 @@
 /*
- *    Copyright 2015-2023 the original author or authors.
+ *    Copyright 2015-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -34,5 +34,17 @@ public interface Serializer {
    * @return unserialized object
    */
   Object unserialize(byte[] bytes);
+
+  /**
+   * Releases any thread-local resources held by this serializer for the current thread. Implementations that use
+   * {@link ThreadLocal} storage (e.g. {@link KryoSerializer}) should override this method to call
+   * {@link ThreadLocal#remove()} and prevent ClassLoader pinning / Metaspace leaks in web-container environments
+   * (Tomcat, etc.) where container threads are reused across redeployments. Callers (e.g. a
+   * {@code ServletContextListener}) should invoke this method for each thread that has used the serializer before the
+   * application is stopped.
+   */
+  default void reset() {
+    // no-op by default
+  }
 
 }
