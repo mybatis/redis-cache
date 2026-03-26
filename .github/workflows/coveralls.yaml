@@ -22,7 +22,7 @@ jobs:
           distribution: temurin
           java-version: 25
       - name: Start Redis
-        uses: shogo82148/actions-setup-redis@b26efc1ddd3c0a06298e9f3ffb4cd405b2d8c57f # v1.48.0
+        uses: shogo82148/actions-setup-redis@2f3253b148c73d7a0682eae73e862b777a4fa74e # v1.49.0
         with:
           redis-version: latest
       - name: Run the build
