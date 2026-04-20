@@ -18,9 +18,11 @@ package org.mybatis.caches.redis;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -37,6 +39,12 @@ final class RedisTestCase {
     cache = new RedisCache(DEFAULT_ID);
   }
 
+  @BeforeEach
+  void resetCacheState() {
+    cache.setTimeout(null);
+    cache.clear();
+  }
+
   @Test
   void shouldDemonstrateCopiesAreEqual() {
     for (int i = 0; i < 1000; i++) {
@@ -51,6 +59,13 @@ final class RedisTestCase {
     assertNotNull(cache.getObject(0));
     cache.removeObject(0);
     assertNull(cache.getObject(0));
+  }
+
+  @Test
+  void shouldReturnDeletedCount() {
+    cache.putObject("to-delete", "value");
+    assertEquals(1L, cache.removeObject("to-delete"));
+    assertEquals(0L, cache.removeObject("to-delete"));
   }
 
   @Test
@@ -80,6 +95,19 @@ final class RedisTestCase {
   @Test
   void shouldVerifyToString() {
     assertEquals("Redis {REDIS}", cache.toString());
+  }
+
+  @Test
+  void shouldReturnReadWriteLock() {
+    assertNotNull(cache.getReadWriteLock());
+    assertSame(cache.getReadWriteLock().readLock(), cache.getReadWriteLock().writeLock());
+  }
+
+  @Test
+  void shouldReportSize() {
+    cache.putObject("k1", "v1");
+    cache.putObject("k2", "v2");
+    assertEquals(2, cache.getSize());
   }
 
   @Test
