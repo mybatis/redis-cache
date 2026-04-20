@@ -158,9 +158,9 @@ class RedisConfigurationBuilderTest {
 
   private boolean isSupportedPropertyType(Class<?> type) {
     return String.class == type || int.class == type || Integer.class == type || long.class == type
-        || Long.class == type || short.class == type || Short.class == type || byte.class == type
-        || Byte.class == type || float.class == type || Float.class == type || boolean.class == type
-        || Boolean.class == type || double.class == type || Double.class == type;
+        || Long.class == type || short.class == type || Short.class == type || byte.class == type || Byte.class == type
+        || float.class == type || Float.class == type || boolean.class == type || Boolean.class == type
+        || double.class == type || Double.class == type;
   }
 
   private static class PropertiesClassLoader extends ClassLoader {
