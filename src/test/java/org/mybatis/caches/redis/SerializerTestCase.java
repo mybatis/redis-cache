@@ -166,4 +166,22 @@ class SerializerTestCase {
     SimpleBeanStudentInfo result = (SimpleBeanStudentInfo) kryoSerializer.unserialize(serialBytes);
     assertEquals(rawSimpleBean, result);
   }
+
+  @Test
+  void testSerializerDefaultResetIsNoOp() {
+    Serializer serializer = new Serializer() {
+      @Override
+      public byte[] serialize(Object object) {
+        return object.toString().getBytes();
+      }
+
+      @Override
+      public Object unserialize(byte[] bytes) {
+        return new String(bytes);
+      }
+    };
+
+    serializer.reset();
+    assertEquals("value", serializer.unserialize(serializer.serialize("value")));
+  }
 }
