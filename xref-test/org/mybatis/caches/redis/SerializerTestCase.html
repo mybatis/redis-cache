@@ -7,7 +7,7 @@
 <body>
 <div id="overview"><a href="../../../../../testapidocs/org/mybatis/caches/redis/SerializerTestCase.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2015-2023 the original author or authors.</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *    Copyright 2015-2026 the original author or authors.</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *    Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *    you may not use this file except in compliance with the License.</em>
@@ -156,9 +156,45 @@
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>     RedisConfig redisConfig = RedisConfigurationBuilder.getInstance().parseConfiguration();
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>     assertEquals(JDKSerializer.<strong class="jxr_keyword">class</strong>, redisConfig.getSerializer().getClass());
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>   }
-<a class="jxr_linenumber" name="L151" href="#L151">151</a> }
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> 
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>   @Test
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>   <strong class="jxr_keyword">void</strong> testKryoResetClearsThreadLocal() <strong class="jxr_keyword">throws</strong> InterruptedException {
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>     <em class="jxr_comment">// Verify that reset() removes the Kryo instance from the current thread's ThreadLocalMap.</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>     <em class="jxr_comment">// After reset(), a subsequent serialize call should still work (new Kryo is created on demand).</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>     <a name="SimpleBeanStudentInfo" href="../../../../org/mybatis/caches/redis/SimpleBeanStudentInfo.html#SimpleBeanStudentInfo">SimpleBeanStudentInfo</a> rawSimpleBean = <strong class="jxr_keyword">new</strong> <a name="SimpleBeanStudentInfo" href="../../../../org/mybatis/caches/redis/SimpleBeanStudentInfo.html#SimpleBeanStudentInfo">SimpleBeanStudentInfo</a>();
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> 
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>     <em class="jxr_comment">// Prime the ThreadLocal for this thread</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>     kryoSerializer.serialize(rawSimpleBean);
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> 
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>     <em class="jxr_comment">// Reset should not throw and should clear the thread-local Kryo instance</em>
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>     kryoSerializer.reset();
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> 
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>     <em class="jxr_comment">// Serialization must still work correctly after reset (new Kryo created lazily)</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>     byte[] serialBytes = kryoSerializer.serialize(rawSimpleBean);
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>     <a name="SimpleBeanStudentInfo" href="../../../../org/mybatis/caches/redis/SimpleBeanStudentInfo.html#SimpleBeanStudentInfo">SimpleBeanStudentInfo</a> result = (<a name="SimpleBeanStudentInfo" href="../../../../org/mybatis/caches/redis/SimpleBeanStudentInfo.html#SimpleBeanStudentInfo">SimpleBeanStudentInfo</a>) kryoSerializer.unserialize(serialBytes);
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>     assertEquals(rawSimpleBean, result);
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>   }
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> 
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>   @Test
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>   <strong class="jxr_keyword">void</strong> testSerializerDefaultResetIsNoOp() {
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>     Serializer serializer = <strong class="jxr_keyword">new</strong> Serializer() {
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>       @Override
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>       <strong class="jxr_keyword">public</strong> byte[] serialize(Object object) {
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>         <strong class="jxr_keyword">return</strong> object.toString().getBytes();
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>       }
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> 
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>       @Override
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>       <strong class="jxr_keyword">public</strong> Object unserialize(byte[] bytes) {
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> String(bytes);
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>       }
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>     };
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> 
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>     serializer.reset();
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>     assertEquals(<span class="jxr_string">"value"</span>, serializer.unserialize(serializer.serialize(<span class="jxr_string">"value"</span>)));
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>   }
+<a class="jxr_linenumber" name="L187" href="#L187">187</a> }
 </pre>
 <hr/>
-<div id="footer">© 2015–2025 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
+<div id="footer">© 2015–2026 <a href="https://www.mybatis.org/">MyBatis.org</a></div>
 </body>
 </html>
