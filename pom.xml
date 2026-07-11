@@ -29,7 +29,7 @@
 
   <groupId>org.mybatis.caches</groupId>
   <artifactId>mybatis-redis</artifactId>
-  <version>1.1.2-SNAPSHOT</version>
+  <version>1.2.1-SNAPSHOT</version>
 
   <name>mybatis-redis</name>
   <description>Redis support for MyBatis Cache</description>
