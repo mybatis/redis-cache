@@ -10,8 +10,3 @@ MyBatis Redis Extension
 ![mybatis-redis](https://mybatis.org/images/mybatis-logo.png)
 
 MyBatis-Redis extension Redis support for MyBatis Cache.
-
-Essentials
-----------
-
-* [See the docs](https://mybatis.org/redis-cache/)
