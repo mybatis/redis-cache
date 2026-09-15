@@ -23,7 +23,7 @@ jobs:
         with:
           cache: maven
           distribution: temurin
-          java-version: 25
+          java-version: 25.0.4+101.0.LTS
       - name: Start Redis
         uses: shogo82148/actions-setup-redis@88a1fb308aae95aa485bf3da667c9d6e61be4c53 # v1.58.0
         with:
