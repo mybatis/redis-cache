@@ -32,7 +32,7 @@ jobs:
           distribution: temurin
           java-version: 25
       - name: Start Redis
-        uses: shogo82148/actions-setup-redis@88a1fb308aae95aa485bf3da667c9d6e61be4c53 # v1.58.0
+        uses: shogo82148/actions-setup-redis@ffaf3c39499b2917543d84f6acc818277580b531 # v1.58.1
         with:
           redis-version: latest
       - name: Set SONAR_SCANNER_JAVA_OPTS
