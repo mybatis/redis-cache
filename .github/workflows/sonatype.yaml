@@ -25,7 +25,7 @@ jobs:
           distribution: temurin
           java-version: 25
       - name: Start Redis
-        uses: shogo82148/actions-setup-redis@ae0182647afadb63583dd695f4312b6965fc28df # v1.61.0
+        uses: shogo82148/actions-setup-redis@4e15bd8c8cc5a7571b8abaf1903b7dbedfea083a # v1.62.0
         with:
           redis-version: latest
       - name: Deploy to Sonatype
